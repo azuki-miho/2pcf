@@ -10,26 +10,28 @@ using namespace std;
 
 int main()
 {
-    time_t timebegin, timeend;
-    timebegin = time(NULL);
+    time_t timebegin, timeend;            //not necessary
+    timebegin = time(NULL);               //not necessary
     ifstream infile;
     string file="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
-    string s;
     infile.open(file.data());
     long totalnumber = 396068;
     long number  = 0;
     long *numberarray;
     double *raarray, *decarray, *rarray;
+    galaxy *galaxyarray;
     numberarray = (long*)malloc(sizeof(long)*totalnumber);
     raarray = (double*)malloc(sizeof(double)*totalnumber);
     decarray = (double*)malloc(sizeof(double)*totalnumber);
     rarray = (double*)malloc(sizeof(double)*totalnumber);
+    galaxyarray = (galaxy*)malloc(sizeof(galaxy)*totalnumber);
 //    numberarray = new long [totalnumber];
 //    raarray = new double [totalnumber];
 //    decarray = new double [totalnumber];
 //    rarray = new double [totalnumber];
     while (!infile.eof())
     {
+        string s;
         getline(infile,s);
         istringstream is(s);
         string str1,str2,str3,str4,str5,str6,str7,str8,str9,str10,str11,str12,str13,str14,str15,str16,str17;
@@ -55,8 +57,9 @@ int main()
     }
     free(numberarray);
     free(raarray);free(decarray);free(rarray);
-    infile.close();
+    free(galaxyarray);
+    infile.close();                             //not necessary
     timeend = time(NULL);
-    cout << timeend-timebegin << endl;
+    cout << timeend-timebegin << endl;          //not necessary
     return 0;
 }
