@@ -1,5 +1,0 @@
-tools : tools.o
-	g++ tools.o -o tools
-
-tools.o : tools.cpp
-	g++ -c tools.cpp -o tools.o
