@@ -1,0 +1,65 @@
+#include<iostream>
+#include<fstream>
+#include<cstring>
+#include<sstream>
+#include<cstdlib>
+#include<ctime>
+#include "tools.h"
+
+using namespace std;
+
+int main()
+{
+    time_t timebegin, timeend;            //not necessary
+    timebegin = time(NULL);               //not necessary
+    ifstream infile;
+    string file="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
+    infile.open(file.data());
+    long totalnumber = 396068;
+    long number  = 0;
+    long *numberarray;
+    double *raarray, *decarray, *rarray;
+    galaxy *galaxyarray;
+    numberarray = (long*)malloc(sizeof(long)*totalnumber);
+    raarray = (double*)malloc(sizeof(double)*totalnumber);
+    decarray = (double*)malloc(sizeof(double)*totalnumber);
+    rarray = (double*)malloc(sizeof(double)*totalnumber);
+    galaxyarray = (galaxy*)malloc(sizeof(galaxy)*totalnumber);
+//    numberarray = new long [totalnumber];
+//    raarray = new double [totalnumber];
+//    decarray = new double [totalnumber];
+//    rarray = new double [totalnumber];
+    while (!infile.eof())
+    {
+        string s;
+        getline(infile,s);
+        istringstream is(s);
+        string str1,str2,str3,str4,str5,str6,str7,str8,str9,str10,str11,str12,str13,str14,str15,str16,str17;
+        const char  *str1c, *str2c, *str3c, *str4c, *str5c, *str6c, *str7c, *str8c, *str9c, *str10c, *str11c, *str12c, *str13c, *str14c, *str15c, *str16c, *str17c;
+        is >> str1 >> str2 >> str3 >> str4 >> str5 >> str6 >> str7 >> str8 >> str9 >> str10 >> str11 >> str12 >> str13 >> str14 >> str15 >> str16 >> str17;
+        str1c = str1.c_str();
+        str4c = str4.c_str();
+        str5c = str5.c_str();
+        str17c = str17.c_str();
+        numberarray[number] = atol(str1c);
+        raarray[number] = atof(str4c);
+        decarray[number] = atof(str5c);
+        rarray[number] = trapequadrature(0,atof(str17c),200,redshift);
+//        if (number%1000 == 0)
+//        {
+//            cout << rarray[number] << endl;
+//        }
+        number += 1;
+//        if (number == 10000)
+//        {
+//            return 0;
+//        }
+    }
+    free(numberarray);
+    free(raarray);free(decarray);free(rarray);
+    free(galaxyarray);
+    infile.close();                             //not necessary
+    timeend = time(NULL);
+    cout << timeend-timebegin << endl;          //not necessary
+    return 0;
+}
