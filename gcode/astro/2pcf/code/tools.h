@@ -6,22 +6,31 @@
 #define TOOLS_H
 using namespace std;
 
-struct galaxy
+struct galaxy1d
 {
-    galaxy() : x(0),y(0),z(0) {  }
-    galaxy(double x0, double y0, double z0) : x(x0),y(y0),z(x0){  }
-    double x,y,z;
+    double loc;
+    long galid;
 };
 
-/*inline galaxy::galaxy()
+struct galaxy
 {
-    x = 0; y = 0; z = 0;
-}*/
+    double xyz[3];
+    long locorder[3];
+};
 
-/*inline galaxy::galaxy(double x0, double y0, double z0)
+struct redtor
 {
-    x = x0; y = y0; z = z0;
-}*/
+    double red;
+    double r;
+};
+
+void galaxysphtocar(double * raarray, double * decarray, double * rarray, galaxy *galarray, long n);
+
+void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp);
+
+void initredtortable(double bg, double ed, int n, redtor *, double H_0)
+
+void quicksortgalaxy1d(galaxy1d *galo, galaxy *galarray,long n, long befnum, int xyz);
 
 double redshift(double z);
 
