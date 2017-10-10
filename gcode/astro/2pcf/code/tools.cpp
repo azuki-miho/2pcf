@@ -10,15 +10,17 @@ double findinredtortable(redtor * redtorarray, long n, double z)
 {
     long left, right;
     double r;
-    left = floor((z-redtorarray[0].red)/(redtorarray[n+1].red-redtorarray[0].red)*n);
-    right = ceil((z-redtorarray[0].red)/(redtorarray[n+1].red-redtorarray[0].red)*n);
+    left = floor((z-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
+    right = ceil((z-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
     if (left == right)
     {
-        r = retorarray[left].r;
+        r = redtorarray[left].r;
     }
     else
     {
+        r = (z-redtorarray[left].red)/(redtorarray[right].red-redtorarray[left].red)*(redtorarray[right].r-redtorarray[left].r)+redtorarray[left].r;
     }
+    return r;
 }
 
 void galaxysphtocar(double * raarray,double * decarray, double * rarray, galaxy *galarray,long n)
@@ -43,7 +45,7 @@ void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp)
     return;
 }
 
-void initredtortable(double bg, double ed, int n, redtor *,double H_0)
+void initredtortable(double bg, double ed, int n, redtor *redtorarray,double H_0)
 {
     double interval, step;
     interval = ed - bg;
@@ -52,14 +54,14 @@ void initredtortable(double bg, double ed, int n, redtor *,double H_0)
     intergraln = ceil(bg/step);
     for (int i = 0; i < n+1; i++)
     {
-        redtor[i].red = bg + i * step;
+        redtorarray[i].red = bg + i * step;
         if (i == 0)
         {
-            redtor[i].r = trapequadrature(0,bg,intergraln,redshift)/H_0;
-
+            redtorarray[i].r = trapequadrature(0,bg,intergraln,redshift)/H_0;
+        }
         else
         {
-            redtor[i].r = redtor[i-1].r + step * redshift(bg+i*step)/H_0;
+            redtorarray[i].r = redtorarray[i-1].r + step * redshift(bg+i*step)/H_0;
         }
     }
     return;
