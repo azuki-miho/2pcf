@@ -19,14 +19,18 @@ int main()
     infile.open(file.data());
     long totalnumber = 396068;
     long number  = 0;
+    double bg=0.01, ed=0.12;
+    long redshiftn = 2000;
     long *numberarray;
     double *raarray, *decarray, *rarray;
     galaxy *galaxyarray;
+    redtor * redtorarray;
     numberarray = (long*)malloc(sizeof(long)*totalnumber);
     raarray = (double*)malloc(sizeof(double)*totalnumber);
     decarray = (double*)malloc(sizeof(double)*totalnumber);
     rarray = (double*)malloc(sizeof(double)*totalnumber);
     galaxyarray = (galaxy*)malloc(sizeof(galaxy)*totalnumber);
+    redtorarray = (redtor*)malloc(sizeof(redtor)*totalnumber);
 //    numberarray = new long [totalnumber];
 //    raarray = new double [totalnumber];
 //    decarray = new double [totalnumber];
@@ -46,7 +50,7 @@ int main()
         numberarray[number] = atol(str1c);
         raarray[number] = atof(str4c);
         decarray[number] = atof(str5c);
-        rarray[number] = trapequadrature(0,atof(str17c),200,redshift)/H_0;
+        rarray[number] = findinredtortable(redtorarray,redshiftn,atof(str17c));
 /*        if (number%1000 == 0)
         {
             cout << rarray[number] << endl;
@@ -62,12 +66,20 @@ int main()
     init1darray(x1d,galaxyarray,totalnumber,0);
     init1darray(y1d,galaxyarray,totalnumber,1);
     init1darray(z1d,galaxyarray,totalnumber,2);
-    quicksortgalaxy1d(x1d,galaxyarray,10000,0,0);
-//    quicksortgalaxy1d(y1d,galaxyarray,totalnumber,0,1);
-//    quicksortgalaxy1d(z1d,galaxyarray,totalnumber,0,2);
-/*    for (int i = 0; i < 100; i++)
+/*    for (int i = 0; i < 10; i++)
     {
         cout << x1d[i].loc << endl;
+    }*/
+    quicksortgalaxy1d(x1d,galaxyarray,totalnumber,0,0);
+    quicksortgalaxy1d(y1d,galaxyarray,totalnumber,0,1);
+    quicksortgalaxy1d(z1d,galaxyarray,totalnumber,0,2);
+/*    for (int i = 0; i < totalnumber; i++)
+    {
+        cout << x1d[i].loc << endl;
+    }*/
+/*    for (int i = 0; i < 10; i++)
+    {
+        cout << galaxyarray[i].locorder[0] << endl;
     }*/
     free(x1d);free(y1d);free(z1d);
     free(numberarray);
