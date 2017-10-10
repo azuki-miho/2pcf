@@ -6,6 +6,8 @@
 #include<ctime>
 #include "tools.h"
 
+#define H_0 69.7
+
 using namespace std;
 
 int main()
@@ -44,17 +46,30 @@ int main()
         numberarray[number] = atol(str1c);
         raarray[number] = atof(str4c);
         decarray[number] = atof(str5c);
-        rarray[number] = trapequadrature(0,atof(str17c),200,redshift);
-//        if (number%1000 == 0)
-//        {
-//            cout << rarray[number] << endl;
-//        }
+        rarray[number] = trapequadrature(0,atof(str17c),200,redshift)/H_0;
+/*        if (number%1000 == 0)
+        {
+            cout << rarray[number] << endl;
+        }*/
         number += 1;
-//        if (number == 10000)
-//        {
-//            return 0;
-//        }
     }
+    galaxysphtocar(raarray,decarray,rarray,galaxyarray,totalnumber);
+
+    galaxy1d *x1d,*y1d,*z1d;
+    x1d = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
+    y1d = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
+    z1d = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
+    init1darray(x1d,galaxyarray,totalnumber,0);
+    init1darray(y1d,galaxyarray,totalnumber,1);
+    init1darray(z1d,galaxyarray,totalnumber,2);
+    quicksortgalaxy1d(x1d,galaxyarray,10000,0,0);
+//    quicksortgalaxy1d(y1d,galaxyarray,totalnumber,0,1);
+//    quicksortgalaxy1d(z1d,galaxyarray,totalnumber,0,2);
+/*    for (int i = 0; i < 100; i++)
+    {
+        cout << x1d[i].loc << endl;
+    }*/
+    free(x1d);free(y1d);free(z1d);
     free(numberarray);
     free(raarray);free(decarray);free(rarray);
     free(galaxyarray);
