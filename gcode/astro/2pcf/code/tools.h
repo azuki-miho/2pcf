@@ -30,7 +30,7 @@ void galaxysphtocar(double * raarray, double * decarray, double * rarray, galaxy
 
 void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp);
 
-void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_0);
+void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_0, double c);
 
 void quicksortgalaxy1d(galaxy1d *galo, galaxy *galarray,long n, long befnum, int xyz);
 
