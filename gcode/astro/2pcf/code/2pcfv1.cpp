@@ -4,9 +4,11 @@
 #include<sstream>
 #include<cstdlib>
 #include<ctime>
+#include<vector>
 #include "tools.h"
 
 #define H_0 69.7
+#define c 299792.458
 
 using namespace std;
 
@@ -31,7 +33,7 @@ int main()
     rarray = (double*)malloc(sizeof(double)*totalnumber);
     galaxyarray = (galaxy*)malloc(sizeof(galaxy)*totalnumber);
     redtorarray = (redtor*)malloc(sizeof(redtor)*(redshiftn+1));
-    initredtortable(bg,ed,redshiftn,redtorarray,H_0);
+    initredtortable(bg,ed,redshiftn,redtorarray,H_0,c);
 //    cout << redtorarray[redshiftn].r << endl;
 //    cout << redtorarray[0].r << endl;
 //    cout << trapequadrature(0,0.01,200,redshift) << endl;
@@ -64,20 +66,20 @@ int main()
     }
     galaxysphtocar(raarray,decarray,rarray,galaxyarray,totalnumber);
 
-    galaxy1d *x1d,*y1d,*z1d;
-    x1d = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
-    y1d = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
-    z1d = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
-    init1darray(x1d,galaxyarray,totalnumber,0);
-    init1darray(y1d,galaxyarray,totalnumber,1);
-    init1darray(z1d,galaxyarray,totalnumber,2);
+    galaxy1d *xarray,*yarray,*zarray;
+    xarray = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
+    yarray = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
+    zarray = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumber);
+    init1darray(xarray,galaxyarray,totalnumber,0);
+    init1darray(yarray,galaxyarray,totalnumber,1);
+    init1darray(zarray,galaxyarray,totalnumber,2);
 /*    for (int i = 0; i < 10; i++)
     {
         cout << x1d[i].loc << endl;
     }*/
-    quicksortgalaxy1d(x1d,galaxyarray,10,0,0);
-    quicksortgalaxy1d(y1d,galaxyarray,totalnumber,0,1);
-    quicksortgalaxy1d(z1d,galaxyarray,totalnumber,0,2);
+    quicksortgalaxy1d(xarray,galaxyarray,totalnumber,0,0);
+    quicksortgalaxy1d(yarray,galaxyarray,totalnumber,0,1);
+    quicksortgalaxy1d(zarray,galaxyarray,totalnumber,0,2);
 /*    for (int i = 0; i < 10; i++)
     {
         cout << x1d[i].loc << endl;
@@ -86,7 +88,8 @@ int main()
     {
         cout << galaxyarray[i].locorder[0] << endl;
     }*/
-    free(x1d);free(y1d);free(z1d);
+    free(redtorarray);
+    free(xarray);free(yarray);free(zarray);
     free(numberarray);
     free(raarray);free(decarray);free(rarray);
     free(galaxyarray);

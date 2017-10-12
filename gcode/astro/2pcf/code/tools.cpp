@@ -2,9 +2,61 @@
 #include<cmath>
 #include<cstdlib>
 #include<cstdio>
+#include<vector>
 #include "tools.h"
 
 using namespace std;
+
+void addarraytotpcf(double **tpcf, int rpn, int rpin, double x1, double y1, double z1, galaxy *gala2, vector<long> &gals)
+{
+    for (int i = 0; i < gals.size(); i++)
+    {
+        double rp, rpi;
+        double x2, y2, z2;
+        x2 = gala2[gals[i]].xyz[0]; y2 = gala2[gals[i]].xyz[1]; z2 = gala2[gals[i]].xyz[2];
+        double lx,ly,lz,sx,sy,sz;
+        lx = x2+x1; ly = y2+y1; lz = z2+z1;
+        sx = x2-x1; sy = y2-y1; sz = z2-z1;
+        rpi = (lx*sx+ly*sy+lz*sz)/sqrt(lx*lx+ly*ly+lz*lz);
+        rp = sqrt(sx*sx+sy*sy+sz*sz-rpi*rpi);
+        if (rp*rp + rpi*rpi > 0)
+        {
+            addtotpcf(tpcf,rpn,rpn,rp,rpi);
+        }
+    }
+    return;
+}
+
+void addtotpcf(double **tpcf, int rpn, int rpin, double rp, double rpi)
+{
+    double rprange = 40, rpirange = 40;
+    if (abs(rp)<rprange && abs(rpi)<rpirange)
+    {
+        int rpo, rpio;
+        rpio = floor(rpi/rprange*rpin)+rpin;
+        if (rp < rprange*pow(2,-rpn+1))
+        {
+            rpo = rpn;
+        }
+        else
+        {
+            rpo = floor(log(rp/rprange)/log(2))+2*rpn;
+        }
+        tpcf[rpio][rpo] += 1;
+    }
+    return;
+}
+
+void calculatetpcf(double **tpcf, int rpn, int rpin, galaxy * gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2)
+{
+    for (int i = 0; i < n1; i++)
+    {
+        vector<long> gals;
+        findgal(gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],gala2,xa2,ya2,za2,n2,gals);
+        addarraytotpcf(tpcf,rpn,rpin,gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],gala2,gals);
+    }
+    return;
+}
 
 double findinredtortable(redtor * redtorarray, long n, double z)
 {
@@ -45,7 +97,7 @@ void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp)
     return;
 }
 
-void initredtortable(double bg, double ed, int n, redtor *redtorarray,double H_0)
+void initredtortable(double bg, double ed, int n, redtor *redtorarray,double H_0,double c)
 {
     double interval, step;
     interval = ed - bg;
@@ -57,11 +109,11 @@ void initredtortable(double bg, double ed, int n, redtor *redtorarray,double H_0
         redtorarray[i].red = bg + i * step;
         if (i == 0)
         {
-            redtorarray[i].r = trapequadrature(0,bg,intergraln,redshift)/H_0;
+            redtorarray[i].r = trapequadrature(0,bg,intergraln,redshift)/H_0*c;
         }
         else
         {
-            redtorarray[i].r = redtorarray[i-1].r + step * redshift(bg+i*step)/H_0;
+            redtorarray[i].r = redtorarray[i-1].r + step * redshift(bg+i*step)/H_0*c;
         }
     }
     return;
