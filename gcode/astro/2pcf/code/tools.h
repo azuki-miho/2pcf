@@ -1,9 +1,11 @@
+#ifndef TOOLS_H
+#define TOOLS_H
+
 #include<iostream>
 #include<cstdlib>
 #include<cmath>
+#include<vector>
 
-#ifndef TOOLS_H
-#define TOOLS_H
 using namespace std;
 
 struct galaxy1d

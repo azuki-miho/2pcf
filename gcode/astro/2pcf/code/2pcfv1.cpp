@@ -4,6 +4,7 @@
 #include<sstream>
 #include<cstdlib>
 #include<ctime>
+#include<vector>
 #include "tools.h"
 
 #define H_0 69.7
