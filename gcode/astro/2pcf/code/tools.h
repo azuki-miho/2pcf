@@ -26,6 +26,12 @@ struct redtor
     double r;
 };
 
+void addarraytotpcf(double **tpcf, int rpn, int rpin, double x1, double y1, double z1,galaxy *gala2, vector<long> &gals);
+
+void addtotpcf(double **tpcf, int rpn, int rpin, double rp, double rpi);
+
+void calculatetpcf(double **tpcf,int rpn, int rpin, galaxy *gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2);
+
 double findinredtortable(redtor * redtorarray, long n, double z);
 
 void galaxysphtocar(double * raarray, double * decarray, double * rarray, galaxy *galarray, long n);
