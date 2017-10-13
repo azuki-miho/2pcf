@@ -88,6 +88,19 @@ int main()
     {
         cout << galaxyarray[i].locorder[0] << endl;
     }*/
+/*    double rprange = 40, rpirange = 40;
+    int rpn  = 40, rpin = 40;
+    double **tpcfdd;
+    tpcfdd = new double *[rpin*2];
+    for (int i = 0; i < rpin*2; i++)
+    {
+        tpcfdd[i] = new double [rpn*2];
+    }
+    for (int i = 0; i < rpin*2; i++)
+    {
+        delete [] tpcfdd[i];
+    }
+    delete [] tpcfdd;*/
     free(redtorarray);
     free(xarray);free(yarray);free(zarray);
     free(numberarray);
