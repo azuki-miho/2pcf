@@ -6,4 +6,3 @@ tools.o : tools.h tools.cpp
 
 2pcfv1.o : tools.h 2pcfv1.cpp
 	g++ -c 2pcfv1.cpp -o 2pcfv1.o
-
