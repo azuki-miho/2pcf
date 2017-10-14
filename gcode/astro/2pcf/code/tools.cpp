@@ -147,8 +147,8 @@ void galaxysphtocar(double * raarray,double * decarray, double * rarray, galaxy 
 {
     for (long i = 0; i < n; i++)
     {
-        galarray[i].xyz[0] = rarray[i]*cos(decarray[i]*M_PI/180.)*sin(raarray[i]*M_PI/180.);
-        galarray[i].xyz[1] = rarray[i]*cos(decarray[i]*M_PI/180.)*cos(raarray[i]*M_PI/180.);
+        galarray[i].xyz[0] = rarray[i]*cos(decarray[i]*M_PI/180.)*cos(raarray[i]*M_PI/180.);
+        galarray[i].xyz[1] = rarray[i]*cos(decarray[i]*M_PI/180.)*sin(raarray[i]*M_PI/180.);
         galarray[i].xyz[2] = rarray[i]*sin(decarray[i]*M_PI/180.);
     }
     return;
