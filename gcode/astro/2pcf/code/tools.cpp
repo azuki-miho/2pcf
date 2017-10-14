@@ -310,7 +310,6 @@ double redshift(double z)
     return 1/pow((OmegaLambda+Omegam*pow(1+z,3)),0.5);
 }
 
-
 double trapequadrature(double bottom, double top, int n, double (*f)(double))
 {
     double step = (top - bottom)/n;
