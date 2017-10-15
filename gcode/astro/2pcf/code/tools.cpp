@@ -128,6 +128,10 @@ long findgals1drtedge(double x, galaxy1d *xa, long n)
 
 double findinredtortable(redtor * redtorarray, long n, double z)
 {
+/*    if (z > 0.12 || z < 0.01)
+    {
+        cout << z << endl;
+    }*/
     long left, right;
     double r;
     left = floor((z-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
@@ -246,6 +250,7 @@ void quicksortgalaxy1d(galaxy1d *galo, galaxy *galarray, long n, long befnum, in
             d = n;
         }
 //        cout << 2 << endl;
+//        cout << d << endl;
         galarray[galo[0].galid].locorder[xyzp] = befnum+d-1;
         galarray[galo[d-1].galid].locorder[xyzp] = befnum;
         galaxy1d temp;

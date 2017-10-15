@@ -21,7 +21,7 @@ int main()
     infile.open(file.data());
     long totalnumber = 396068;
     long number  = 0;
-    double bg=0.01, ed=0.12;
+    double bg=0.008, ed=0.13;
     long redshiftn = 4000;
     long *numberarray;
     double *raarray, *decarray, *rarray;
@@ -34,6 +34,7 @@ int main()
     galaxyarray = (galaxy*)malloc(sizeof(galaxy)*totalnumber);
     redtorarray = (redtor*)malloc(sizeof(redtor)*(redshiftn+1));
     initredtortable(bg,ed,redshiftn,redtorarray,H_0,c);
+//    cout << redtorarray[redshiftn-1].r << endl;
 //    cout << redtorarray[redshiftn].r << endl;
 //    cout << redtorarray[0].r << endl;
 //    cout << trapequadrature(0,0.01,200,redshift) << endl;
@@ -73,18 +74,25 @@ int main()
     init1darray(xarray,galaxyarray,totalnumber,0);
     init1darray(yarray,galaxyarray,totalnumber,1);
     init1darray(zarray,galaxyarray,totalnumber,2);
-/*    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++)
     {
-        cout << x1d[i].loc << endl;
+        cout << xarray[i].loc << endl;
+    }
+/*    for (int i = 0; i < totalnumber; i++)
+    {
+        if (xarray[i].loc < -10000)
+        {
+            cout << "wroing" << endl;
+        }
     }*/
     quicksortgalaxy1d(xarray,galaxyarray,totalnumber,0,0);
     quicksortgalaxy1d(yarray,galaxyarray,totalnumber,0,1);
     quicksortgalaxy1d(zarray,galaxyarray,totalnumber,0,2);
-/*    for (int i = 0; i < 10; i++)
+/*    for (int i = 0; i < totalnumber; i++)
     {
-        cout << x1d[i].loc << endl;
-    }
-    for (int i = 0; i < 10; i++)
+        cout << zarray[i].loc << endl;
+    }*/
+/*    for (int i = 0; i < 10; i++)
     {
         cout << galaxyarray[i].locorder[0] << endl;
     }*/
