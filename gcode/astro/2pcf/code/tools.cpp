@@ -7,11 +7,11 @@
 
 using namespace std;
 
-void addarraytotpcf(double **tpcf, double rprange, double rpirange, int rpn, int rpin, double x1, double y1, double z1, galaxy *gala2, vector<long> &gals)
+void addarraytotpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double x1, double y1, double z1, galaxy *gala2, vector<long> &gals)
 {
     for (int i = 0; i < gals.size(); i++)
     {
-        double rp, rpi;
+        double rpi, rp;
         double x2, y2, z2;
         x2 = gala2[gals[i]].xyz[0]; y2 = gala2[gals[i]].xyz[1]; z2 = gala2[gals[i]].xyz[2];
         double lx,ly,lz,sx,sy,sz;
@@ -21,17 +21,17 @@ void addarraytotpcf(double **tpcf, double rprange, double rpirange, int rpn, int
         rp = sqrt(sx*sx+sy*sy+sz*sz-rpi*rpi);
         if (rp*rp + rpi*rpi > 0)
         {
-            addtotpcf(tpcf,rprange,rpirange,rpn,rpn,rp,rpi);
+            addtotpcf(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
         }
     }
     return;
 }
 
-void addtotpcf(double **tpcf, double rprange, double rpirange, int rpn, int rpin, double rp, double rpi)
+void addtotpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp)
 {
     if (abs(rp)<rprange && abs(rpi)<rpirange)
     {
-        int rpo, rpio;
+        int rpio, rpo;
         rpio = floor(rpi/rprange*rpin)+rpin;
         if (rp < rprange*pow(2,-rpn+1))
         {
@@ -46,18 +46,30 @@ void addtotpcf(double **tpcf, double rprange, double rpirange, int rpn, int rpin
     return;
 }
 
-void calculatetpcf(double **tpcf, double rprange, double rpirange, int rpn, int rpin, galaxy * gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2)
+void calculatetpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, galaxy * gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2)
 {
     for (int i = 0; i < n1; i++)
     {
         vector<long> gals;
-        findgals(gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],rprange,rpirange,xa2,ya2,za2,n2,gals);
-        addarraytotpcf(tpcf,rprange,rpirange,rpn,rpin,gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],gala2,gals);
+        findgals(gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],rpirange,rprange,xa2,ya2,za2,n2,gals);
+        addarraytotpcf(tpcf,rpirange,rprange,rpin,rpn,gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],gala2,gals);
     }
     return;
 }
 
-void findgals(double x, double y, double z, double rprange, double rpirange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2, vector<long> &gals)
+void filltpcf(double **tpcf,int rpin, int rpn)
+{
+    for (int i = 0; i < 2*rpin, i++)
+    {
+        for (int j = 0; j < rpn; j++)
+        {
+            tpcf[i][j] = tpcf[i][2*rpn-1-i];
+        }
+    }
+    return;
+}
+
+void findgals(double x, double y, double z, double rpirange, double rprange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2, vector<long> &gals)
 {
     double radius = sqrt(rprange*rprange+rpirange*rpirange);
     vector<long> xgals, ygals, zgals, xygals;
@@ -210,6 +222,17 @@ void initredtortable(double bg, double ed, int n, redtor *redtorarray,double H_0
         {
             redtorarray[i].r = redtorarray[i-1].r + step * redshift(bg+i*step)/H_0*c;
         }
+    }
+    return;
+}
+
+void inittpcf(double **tpcf, int rpin, rpn)
+{
+    for (int i = 0; i < 2*rpin; i++)
+    {
+        for (int j = 0; j < 2*rpn; j++)
+        {
+            tpcf[i][j] = 0;
     }
     return;
 }
