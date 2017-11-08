@@ -28,7 +28,9 @@ struct redtor
 
 void addarraytotpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double x1, double y1, double z1,galaxy *gala2, vector<long> &gals);
 
-void addtotpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp);
+void addtotpcfv1(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp);
+
+void addtotpcfv2(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp);
 
 void calculatetpcf(double **tpcf, double rpirange,double rprange, int rpin, int rpn, galaxy *gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2);
 
@@ -52,7 +54,7 @@ void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp);
 
 void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_0, double c);
 
-void inittpcf(double **tpcf, int rpin, int, rpn);
+void inittpcf(double **tpcf, int rpin, int rpn);
 
 void quicksortgalaxy1d(galaxy1d *galo, galaxy *galarray,long n, long befnum, int xyz);
 

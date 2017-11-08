@@ -21,15 +21,16 @@ void addarraytotpcf(double **tpcf, double rpirange, double rprange, int rpin, in
         rp = sqrt(sx*sx+sy*sy+sz*sz-rpi*rpi);
         if (rp*rp + rpi*rpi > 0)
         {
-            addtotpcf(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
+//            addtotpcfv1(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
+            addtotpcfv2(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
         }
     }
     return;
 }
 
-void addtotpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp)
+void addtotpcfv1(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp)
 {
-    if (abs(rp)<rprange && abs(rpi)<rpirange)
+    if (abs(rpi)<rpirange && abs(rp)<rprange)
     {
         int rpio, rpo;
         rpio = floor(rpi/rprange*rpin)+rpin;
@@ -41,6 +42,18 @@ void addtotpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn
         {
             rpo = floor(log(rp/rprange)/log(2))+2*rpn;
         }
+        tpcf[rpio][rpo] += 1;
+    }
+    return;
+}
+
+void addtotpcfv2(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp)
+{
+    if (abs(rpi)<rpirange && abs(rp)<rprange)
+    {
+        int rpio, rpo;
+        rpio = floor(rpi/rprange*rpin)+rpin;
+        rpo = floor(rp/rprange*rpn)+rpn;
         tpcf[rpio][rpo] += 1;
     }
     return;
@@ -59,11 +72,11 @@ void calculatetpcf(double **tpcf, double rpirange, double rprange, int rpin, int
 
 void filltpcf(double **tpcf,int rpin, int rpn)
 {
-    for (int i = 0; i < 2*rpin, i++)
+    for (int i = 0; i < 2*rpin; i++)
     {
         for (int j = 0; j < rpn; j++)
         {
-            tpcf[i][j] = tpcf[i][2*rpn-1-i];
+            tpcf[i][j] = tpcf[i][2*rpn-1-j];
         }
     }
     return;
@@ -75,7 +88,7 @@ void findgals(double x, double y, double z, double rpirange, double rprange, gal
     vector<long> xgals, ygals, zgals, xygals;
     findgals1d(x,radius,xa2,n2,xgals);
     findgals1d(y,radius,ya2,n2,ygals);
-    findgals1d(z,radius,za2,n2,ygals);
+    findgals1d(z,radius,za2,n2,zgals);
     quicksortgals(xgals.begin(),xgals.size());
     quicksortgals(ygals.begin(),ygals.size());
     quicksortgals(zgals.begin(),zgals.size());
@@ -143,7 +156,8 @@ double findinredtortable(redtor * redtorarray, long n, double z)
 /*    if (z > 0.12 || z < 0.01)
     {
         cout << z << endl;
-    }*/
+    }
+*/
     long left, right;
     double r;
     left = floor((z-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
@@ -226,13 +240,14 @@ void initredtortable(double bg, double ed, int n, redtor *redtorarray,double H_0
     return;
 }
 
-void inittpcf(double **tpcf, int rpin, rpn)
+void inittpcf(double **tpcf, int rpin, int  rpn)
 {
     for (int i = 0; i < 2*rpin; i++)
     {
         for (int j = 0; j < 2*rpn; j++)
         {
             tpcf[i][j] = 0;
+        }
     }
     return;
 }
@@ -363,4 +378,5 @@ int main()
     cout << integral << endl;
     printf("%.8f",M_PI);
     return 0;
-}*/
+}
+*/
