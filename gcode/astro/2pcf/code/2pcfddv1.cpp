@@ -16,37 +16,32 @@ int main()
 {
     time_t timebegin, timeend;            //not necessary
     timebegin = time(NULL);               //not necessary
-    ifstream infiledata, infilerandom;
-    ofstream outfiletpcfdata, outfiletpcf;
+    ifstream infiledata;
+    ofstream outfiletpcfdata;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
-    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOM/randomSamp";
     string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171110/20171110_tpcfv2data";
-    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171110/20171110_tpcfv2";
     infiledata.open(filedata.data());
-    infilerandom.open(filerandom.data());
     outfiletpcfdata.open(filetpcfdata.data());
-    outfiletpcf.open(filetpcf.data());
-    long totalnumberdata = 396068;       //acutally 396068
-    long totalnumberrandom = 672238;     //acutally 672238
+    long totalnumberdata = 80000;       //acutally 396068
     long numberdata  = 0;
-    long numberrandom = 0;
     double bg=0.008, ed=0.13;
     long redshiftn = 4000;
+    long *numberarraydata;
     double *raarraydata, *decarraydata, *rarraydata;
     galaxy *galaxyarraydata;
-    galaxy *galaxyarrayrandom;
     redtor * redtorarray;
+    numberarraydata = (long*)malloc(sizeof(long)*totalnumberdata);
     raarraydata = (double*)malloc(sizeof(double)*totalnumberdata);
     decarraydata = (double*)malloc(sizeof(double)*totalnumberdata);
     rarraydata = (double*)malloc(sizeof(double)*totalnumberdata);
     galaxyarraydata = (galaxy*)malloc(sizeof(galaxy)*totalnumberdata);
-    galaxyarrayrandom = (galaxy*)malloc(sizeof(galaxy)*totalnumberrandom);
     redtorarray = (redtor*)malloc(sizeof(redtor)*(redshiftn+1));
     initredtortable(bg,ed,redshiftn,redtorarray,H_0,c);
 //    cout << redtorarray[redshiftn-1].r << endl;
 //    cout << redtorarray[redshiftn].r << endl;
 //    cout << redtorarray[0].r << endl;
 //    cout << trapequadrature(0,0.01,200,redshift) << endl;
+//    numberarrayd = new long [totalnumber];
 //    raarrayd = new double [totalnumber];
 //    decarrayd = new double [totalnumber];
 //    rarrayd = new double [totalnumber];
@@ -62,6 +57,7 @@ int main()
         str4c = str4.c_str();
         str5c = str5.c_str();
         str17c = str17.c_str();
+        numberarraydata[numberdata] = atol(str1c);
         raarraydata[numberdata] = atof(str4c);
         decarraydata[numberdata] = atof(str5c);
 //        rarrayd[number] = trapequadrature(0,atof(str17c),200,redshift)/H_0;
@@ -73,38 +69,14 @@ int main()
         numberdata += 1;
     }
     galaxysphtocar(raarraydata,decarraydata,rarraydata,galaxyarraydata,totalnumberdata);
-    while (/*!infilerandom.eof()*/numberrandom<totalnumberrandom)
-    {
-        string s;
-        getline(infilerandom,s);
-        istringstream is(s);
-        string str1,str2,str3,str4,str5,str6,str7,str8,str9,str10,str11,str12,str13,str14,str15,str16,str17;
-        const char  *str1c, *str2c, *str3c, *str4c, *str5c, *str6c, *str7c, *str8c, *str9c, *str10c, *str11c, *str12c, *str13c, *str14c, *str15c, *str16c, *str17c;
-        is >> str1 >> str2 >> str3 >> str4 >> str5 >> str6 >> str7 >> str8 >> str9 >> str10 >> str11 >> str12 >> str13 >> str14 >> str15 >> str16 >> str17;
-        str6c = str6.c_str();
-        str7c = str7.c_str();
-        str8c = str8.c_str();
-        galaxyarrayrandom[numberrandom].xyz[0] = atof(str6c);
-        galaxyarrayrandom[numberrandom].xyz[1] = atof(str7c);
-        galaxyarrayrandom[numberrandom].xyz[2] = atof(str8c);
-        numberrandom += 1;
-    }
 
     galaxy1d *xarraydata,*yarraydata,*zarraydata;
-    galaxy1d *xarrayrandom, *yarrayrandom, *zarrayrandom;
-
     xarraydata = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumberdata);
     yarraydata = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumberdata);
     zarraydata = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumberdata);
-    xarrayrandom = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumberrandom);
-    yarrayrandom = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumberrandom);
-    zarrayrandom = (galaxy1d*)malloc(sizeof(galaxy1d)*totalnumberrandom);
     init1darray(xarraydata,galaxyarraydata,totalnumberdata,0);
     init1darray(yarraydata,galaxyarraydata,totalnumberdata,1);
     init1darray(zarraydata,galaxyarraydata,totalnumberdata,2);
-    init1darray(xarrayrandom,galaxyarrayrandom,totalnumberrandom,0);
-    init1darray(yarrayrandom,galaxyarrayrandom,totalnumberrandom,1);
-    init1darray(zarrayrandom,galaxyarrayrandom,totalnumberrandom,2);
 /*    for (int i = 0; i < 10; i++)
     {
         cout << xarraydata[i].loc << endl;
@@ -119,15 +91,6 @@ int main()
     quicksortgalaxy1d(xarraydata,galaxyarraydata,totalnumberdata,0,0);
     quicksortgalaxy1d(yarraydata,galaxyarraydata,totalnumberdata,0,1);
     quicksortgalaxy1d(zarraydata,galaxyarraydata,totalnumberdata,0,2);
-    quicksortgalaxy1d(xarrayrandom,galaxyarrayrandom,totalnumberrandom,0,0);
-    quicksortgalaxy1d(yarrayrandom,galaxyarrayrandom,totalnumberrandom,0,1);
-    quicksortgalaxy1d(zarrayrandom,galaxyarrayrandom,totalnumberrandom,0,2);
-    cout << xarraydata[0].loc << " " << xarraydata[totalnumberdata-1].loc << endl;
-    cout << yarraydata[0].loc << " " << yarraydata[totalnumberdata-1].loc << endl;
-    cout << zarraydata[0].loc << " " << zarraydata[totalnumberdata-1].loc << endl;
-    cout << xarrayrandom[0].loc << " " << xarrayrandom[totalnumberrandom-1].loc << endl;
-    cout << yarrayrandom[0].loc << " " << yarrayrandom[totalnumberrandom-1].loc << endl;
-    cout << zarrayrandom[0].loc << " " << zarrayrandom[totalnumberrandom-1].loc << endl;
 /*    for (int i = 0; i < 20; i++)
     {
         cout << xarraydata[i].loc << endl;
@@ -139,39 +102,15 @@ int main()
     double rprange = 40, rpirange = 40;
     int rpn  = 40, rpin = 40;
     double **tpcfdd;
-    double **tpcfrr;
-    double **tpcfdr;
-    double **tpcf;
     tpcfdd = new double *[rpin*2];
-    tpcfrr = new double *[rpin*2];
-    tpcfdr = new double *[rpin*2];
-    tpcf = new double *[rpin*2];
     for (int i = 0; i < rpin*2; i++)
     {
         tpcfdd[i] = new double [rpn*2];
-        tpcfrr[i] = new double [rpn*2];
-        tpcfdr[i] = new double [rpn*2];
-        tpcf[i] = new double [rpn*2];
     }
     inittpcf(tpcfdd,rpin,rpn);
-    inittpcf(tpcfrr,rpin,rpn);
-    inittpcf(tpcfdr,rpin,rpn);
-    inittpcf(tpcf,rpin,rpn);
-//    calculatetpcf(tpcfdd,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarraydata,xarraydata,yarraydata,zarraydata,totalnumberdata);
-//    calculatetpcf(tpcfrr,rpirange,rprange,rpin,rpn,galaxyarrayrandom,totalnumberrandom,galaxyarrayrandom,xarrayrandom,yarrayrandom,zarrayrandom,totalnumberrandom);
-//    calculatetpcf(tpcfdr,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarrayrandom,xarrayrandom,yarrayrandom,zarrayrandom,totalnumberrandom);
+    calculatetpcf(tpcfdd,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarraydata,xarraydata,yarraydata,zarraydata,totalnumberdata);
 
     filltpcf(tpcfdd,rpin,rpn);
-    filltpcf(tpcfrr,rpin,rpn);
-    filltpcf(tpcfdr,rpin,rpn);
-    for (int i = 0; i < rpin*2; i++)
-    {
-        for (int j = 0; j < rpn*2; j++)
-        {
-            tpcf[i][j] = ((double)tpcfdd[i][j])*((double)tpcfrr[i][j])/(((double)tpcfdr[i][j])*((double)tpcfdr[i][j]))-1;
-        }
-    }
-    /*
     long testn = 0;
     for (int i = 0; i < rpin*2; i++)
     {
@@ -181,7 +120,6 @@ int main()
         }
     }
     cout << testn << endl;
-    */
     for (int i = 0; i < rpin*2; i++)
     {
         for (int j = 0; j < rpn*2; j++)
@@ -199,41 +137,17 @@ int main()
     }
     for (int i = 0; i < rpin*2; i++)
     {
-        for (int j = 0; j < rpn*2; j++)
-        {
-            outfiletpcf << tpcfdr[i][j];
-            if (j!=(rpn*2-1))
-            {
-                outfiletpcf << " ";
-            }
-        }
-        if (i!=(rpin*2-1))
-        {
-            outfiletpcf << endl;
-        }
-    }
-    for (int i = 0; i < rpin*2; i++)
-    {
         delete [] tpcfdd[i];
-        delete [] tpcfrr[i];
-        delete [] tpcfdr[i];
-        delete [] tpcf[i];
     }
     delete [] tpcfdd;
-    delete [] tpcfrr;
-    delete [] tpcfdr;
-    delete [] tpcf;
 
     free(redtorarray);
     free(xarraydata);free(yarraydata);free(zarraydata);
-    free(xarrayrandom);free(yarrayrandom);free(zarrayrandom);
+    free(numberarraydata);
     free(raarraydata);free(decarraydata);free(rarraydata);
     free(galaxyarraydata);
-    free(galaxyarrayrandom);
     outfiletpcfdata.close();
-    outfiletpcf.close();
-    infiledata.close();                             //not necessaryi
-    infilerandom.close();
+    infiledata.close();                             //not necessary
     timeend = time(NULL);
     cout << timeend-timebegin << endl;          //not necessary
     return 0;

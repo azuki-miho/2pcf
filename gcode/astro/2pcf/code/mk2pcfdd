@@ -1,0 +1,8 @@
+2pcfddv1 : tools.o 2pcfddv1.o
+	g++ 2pcfddv1.o tools.o -o 2pcfddv1 -std=c++11
+
+tools.o : tools.h tools.cpp
+	g++ -c tools.cpp -o tools.o -std=c++11
+
+2pcfddv1.o : tools.h 2pcfddv1.cpp
+	g++ -c 2pcfddv1.cpp -o 2pcfddv1.o
