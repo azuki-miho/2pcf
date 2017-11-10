@@ -64,7 +64,8 @@ void calculatetpcf(double **tpcf, double rpirange, double rprange, int rpin, int
     for (int i = 0; i < n1; i++)
     {
         vector<long> gals;
-        findgals(gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],rpirange,rprange,xa2,ya2,za2,n2,gals);
+//        findgalsv1(gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],rpirange,rprange,xa2,ya2,za2,n2,gals);
+        findgalsv2(gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],rpirange,rprange,xa2,ya2,za2,n2,gala2,gals);
         addarraytotpcf(tpcf,rpirange,rprange,rpin,rpn,gala1[i].xyz[0],gala1[i].xyz[1],gala1[i].xyz[2],gala2,gals);
     }
     return;
@@ -82,18 +83,78 @@ void filltpcf(double **tpcf,int rpin, int rpn)
     return;
 }
 
-void findgals(double x, double y, double z, double rpirange, double rprange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2, vector<long> &gals)
+void findgalsv1(double x, double y, double z, double rpirange, double rprange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2, vector<long> &gals)
 {
     double radius = sqrt(rprange*rprange+rpirange*rpirange);
     vector<long> xgals, ygals, zgals, xygals;
     findgals1d(x,radius,xa2,n2,xgals);
     findgals1d(y,radius,ya2,n2,ygals);
     findgals1d(z,radius,za2,n2,zgals);
+//    cout << xgals.size() << endl;
+//    cout << ygals.size() << endl;
+//    cout << zgals.size() << endl;
     quicksortgals(xgals.begin(),xgals.size());
     quicksortgals(ygals.begin(),ygals.size());
     quicksortgals(zgals.begin(),zgals.size());
     galintersect(xgals,ygals,xygals);
     galintersect(xygals,zgals,gals);
+//    cout << gals.size() << endl;
+    return;
+}
+
+void findgalsv2(double x, double y, double z, double rpirange, double rprange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2, galaxy *gala2, vector<long> &gals)
+{
+    double radius = sqrt(rprange*rprange+rpirange*rpirange);
+    long lftx, rtx, lfty, rty, lftz, rtz, xnum, ynum, znum;
+    lftx = findgals1dlftedge(x-radius,xa2,n2);
+    rtx = findgals1drtedge(x+radius,xa2,n2);
+    lfty = findgals1dlftedge(y-radius,ya2,n2);
+    rty = findgals1drtedge(y+radius,ya2,n2);
+    lftz = findgals1dlftedge(z-radius,za2,n2);
+    rtz = findgals1drtedge(z+radius,za2,n2);
+    xnum = rtx - lftx;
+    ynum = rty - lfty;
+    znum = rtz - lftz;
+    if (xnum < ynum && xnum < znum)
+    {
+        long yo, zo;
+        for (long i = lftx; i < rtx; i++)
+        {
+            yo = gala2[xa2[i].galid].locorder[1];
+            zo = gala2[xa2[i].galid].locorder[2];
+            if (lfty <= yo && yo < rty && lftz <= zo && zo < rtz)
+            {
+                gals.push_back(xa2[i].galid);
+            }
+        }
+    }
+    else if(ynum < znum)
+    {
+        long xo, zo;
+        for (long i = lfty; i < rty; i++)
+        {
+            xo = gala2[ya2[i].galid].locorder[0];
+            zo = gala2[ya2[i].galid].locorder[2];
+            if (lftx <= xo && xo < rtx && lftz <= zo && zo < rtz)
+            {
+                gals.push_back(ya2[i].galid);
+            }
+        }
+    }
+    else
+    {
+        long xo, yo;
+        for (long i = lftz; i < rtz; i++)
+        {
+            xo = gala2[za2[i].galid].locorder[0];
+            yo = gala2[za2[i].galid].locorder[1];
+            if (lftx <= xo && xo < rtx && lfty <= yo && yo < rty)
+            {
+                gals.push_back(za2[i].galid);
+            }
+        }
+    }
+//    cout << gals.size() << endl;
     return;
 }
 

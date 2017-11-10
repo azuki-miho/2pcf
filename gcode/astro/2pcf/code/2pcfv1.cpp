@@ -19,10 +19,10 @@ int main()
     ifstream infiledata;
     ofstream outfiletpcfdata;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
-    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171107_tpcfv2data";
+    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171110/20171110_tpcfv2data";
     infiledata.open(filedata.data());
     outfiletpcfdata.open(filetpcfdata.data());
-    long totalnumberdata = 8000;       //acutally 396068
+    long totalnumberdata = 80000;       //acutally 396068
     long numberdata  = 0;
     double bg=0.008, ed=0.13;
     long redshiftn = 4000;
@@ -111,6 +111,15 @@ int main()
     calculatetpcf(tpcfdd,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarraydata,xarraydata,yarraydata,zarraydata,totalnumberdata);
 
     filltpcf(tpcfdd,rpin,rpn);
+    long testn = 0;
+    for (int i = 0; i < rpin*2; i++)
+    {
+        for (int j = 0; j < rpn*2; j++)
+        {
+            testn += tpcfdd[i][j];
+        }
+    }
+    cout << testn << endl;
     for (int i = 0; i < rpin*2; i++)
     {
         for (int j = 0; j < rpn*2; j++)

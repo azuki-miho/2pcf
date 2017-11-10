@@ -36,7 +36,9 @@ void calculatetpcf(double **tpcf, double rpirange,double rprange, int rpin, int 
 
 void filltpcf(double **tpcf, int rpin, int rpn);
 
-void findgals(double x, double y, double z, double rpirange, double rprange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2,vector<long> &gals);
+void findgalsv1(double x, double y, double z, double rpirange, double rprange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2,vector<long> &gals);
+
+void findgalsv2(double x, double y, double z, double rpirange, double rprange, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2, galaxy *gala2, vector<long> &gals);
 
 void findgals1d(double x, double radius, galaxy1d *xa, long n, vector<long> &xgals);
 
