@@ -20,14 +20,14 @@ int main()
     ofstream outfiletpcfdata, outfiletpcf;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
     string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOM/randomSamp";
-    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171110/20171110_tpcfv2data";
-    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171110/20171110_tpcfv2";
+    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171114/20171114_tpcfv1data";
+    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171114/20171114_tpcfv1";
     infiledata.open(filedata.data());
     infilerandom.open(filerandom.data());
     outfiletpcfdata.open(filetpcfdata.data());
     outfiletpcf.open(filetpcf.data());
-    long totalnumberdata = 396068;       //acutally 396068
-    long totalnumberrandom = 672238;     //acutally 672238
+    long totalnumberdata = 80000;       //acutally 396068
+    long totalnumberrandom = 80000;     //acutally 672238
     long numberdata  = 0;
     long numberrandom = 0;
     double bg=0.008, ed=0.13;
@@ -122,20 +122,24 @@ int main()
     quicksortgalaxy1d(xarrayrandom,galaxyarrayrandom,totalnumberrandom,0,0);
     quicksortgalaxy1d(yarrayrandom,galaxyarrayrandom,totalnumberrandom,0,1);
     quicksortgalaxy1d(zarrayrandom,galaxyarrayrandom,totalnumberrandom,0,2);
+    /*
     cout << xarraydata[0].loc << " " << xarraydata[totalnumberdata-1].loc << endl;
     cout << yarraydata[0].loc << " " << yarraydata[totalnumberdata-1].loc << endl;
     cout << zarraydata[0].loc << " " << zarraydata[totalnumberdata-1].loc << endl;
     cout << xarrayrandom[0].loc << " " << xarrayrandom[totalnumberrandom-1].loc << endl;
     cout << yarrayrandom[0].loc << " " << yarrayrandom[totalnumberrandom-1].loc << endl;
     cout << zarrayrandom[0].loc << " " << zarrayrandom[totalnumberrandom-1].loc << endl;
-/*    for (int i = 0; i < 20; i++)
+    */
+    /*
+    for (int i = 0; i < 20; i++)
     {
         cout << xarraydata[i].loc << endl;
     }
     for (int i = 0; i < 10; i++)
     {
         cout << galaxyarrayd[i].locorder[0] << endl;
-    }*/
+    }
+    */
     double rprange = 40, rpirange = 40;
     int rpn  = 40, rpin = 40;
     double **tpcfdd;
@@ -157,9 +161,9 @@ int main()
     inittpcf(tpcfrr,rpin,rpn);
     inittpcf(tpcfdr,rpin,rpn);
     inittpcf(tpcf,rpin,rpn);
-//    calculatetpcf(tpcfdd,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarraydata,xarraydata,yarraydata,zarraydata,totalnumberdata);
-//    calculatetpcf(tpcfrr,rpirange,rprange,rpin,rpn,galaxyarrayrandom,totalnumberrandom,galaxyarrayrandom,xarrayrandom,yarrayrandom,zarrayrandom,totalnumberrandom);
-//    calculatetpcf(tpcfdr,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarrayrandom,xarrayrandom,yarrayrandom,zarrayrandom,totalnumberrandom);
+    calculatetpcf(tpcfdd,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarraydata,xarraydata,yarraydata,zarraydata,totalnumberdata);
+    calculatetpcf(tpcfrr,rpirange,rprange,rpin,rpn,galaxyarrayrandom,totalnumberrandom,galaxyarrayrandom,xarrayrandom,yarrayrandom,zarrayrandom,totalnumberrandom);
+    calculatetpcf(tpcfdr,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,galaxyarrayrandom,xarrayrandom,yarrayrandom,zarrayrandom,totalnumberrandom);
 
     filltpcf(tpcfdd,rpin,rpn);
     filltpcf(tpcfrr,rpin,rpn);
@@ -201,7 +205,7 @@ int main()
     {
         for (int j = 0; j < rpn*2; j++)
         {
-            outfiletpcf << tpcfdr[i][j];
+            outfiletpcf << tpcf[i][j];
             if (j!=(rpn*2-1))
             {
                 outfiletpcf << " ";

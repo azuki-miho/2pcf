@@ -21,8 +21,8 @@ void addarraytotpcf(double **tpcf, double rpirange, double rprange, int rpin, in
         rp = sqrt(sx*sx+sy*sy+sz*sz-rpi*rpi);
         if (rp*rp + rpi*rpi > 0)
         {
-//            addtotpcfv1(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
-            addtotpcfv2(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
+            addtotpcfv1(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
+//            addtotpcfv2(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
         }
     }
     return;
@@ -32,17 +32,20 @@ void addtotpcfv1(double **tpcf, double rpirange, double rprange, int rpin, int r
 {
     if (abs(rpi)<rpirange && abs(rp)<rprange)
     {
-        int rpio, rpo;
-        rpio = floor(rpi/rprange*rpin)+rpin;
-        if (rp < rprange*pow(2,-rpn+1))
+        double scale = 200;
+        double rpmin = rprange/scale;
+        if (rp < rpmin)
         {
-            rpo = rpn;
+            return;
         }
         else
         {
-            rpo = floor(log(rp/rprange)/log(2))+2*rpn;
+            int rpio, rpo;
+            double p = pow(scale,1./rpn);
+            rpio = floor(rpi/rprange*rpin)+rpin;
+            rpo = floor(log(rp/rpmin)/log(p))+rpn;
+            tpcf[rpio][rpo] += 1;
         }
-        tpcf[rpio][rpo] += 1;
     }
     return;
 }
