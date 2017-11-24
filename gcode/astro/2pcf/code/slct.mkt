@@ -1,0 +1,8 @@
+selectgalxy : tools.o selectgalaxy.o
+	g++ selectgalaxy.o tools.o -o selectgalaxy -std=c++11
+
+tools.o : tools.h tools.cpp
+	g++ -c tools.cpp -o tools.o -std=c++11
+
+selectgalaxy.o : tools.h selectgalaxy.cpp
+	g++ -c selectgalaxy.cpp -o selectgalaxy.o
