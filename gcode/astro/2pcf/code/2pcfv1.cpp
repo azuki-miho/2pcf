@@ -19,15 +19,16 @@ int main()
     ifstream infiledata, infilerandom;
     ofstream outfiletpcfdata, outfiletpcf;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
-    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOM/randomSamp";
-    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171114/20171114_tpcfv1data";
-    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171114/20171114_tpcfv1";
+    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/randomSelect";
+    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171125/20171125_tpcfv1data";
+    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171125/20171125_tpcfv1";
     infiledata.open(filedata.data());
     infilerandom.open(filerandom.data());
     outfiletpcfdata.open(filetpcfdata.data());
     outfiletpcf.open(filetpcf.data());
-    long totalnumberdata = 80000;       //acutally 396068
-    long totalnumberrandom = 80000;     //acutally 672238
+    long totalnumberdata = 396068;       //acutally 396068
+    long totalnumberrandom = 585639;    //acutally 585639
+    //long totalnumberrandom = 80000;     acutally 672238
     long numberdata  = 0;
     long numberrandom = 0;
     double bg=0.008, ed=0.13;
@@ -78,15 +79,15 @@ int main()
         string s;
         getline(infilerandom,s);
         istringstream is(s);
-        string str1,str2,str3,str4,str5,str6,str7,str8,str9,str10,str11,str12,str13,str14,str15,str16,str17;
-        const char  *str1c, *str2c, *str3c, *str4c, *str5c, *str6c, *str7c, *str8c, *str9c, *str10c, *str11c, *str12c, *str13c, *str14c, *str15c, *str16c, *str17c;
-        is >> str1 >> str2 >> str3 >> str4 >> str5 >> str6 >> str7 >> str8 >> str9 >> str10 >> str11 >> str12 >> str13 >> str14 >> str15 >> str16 >> str17;
-        str6c = str6.c_str();
-        str7c = str7.c_str();
-        str8c = str8.c_str();
-        galaxyarrayrandom[numberrandom].xyz[0] = atof(str6c);
-        galaxyarrayrandom[numberrandom].xyz[1] = atof(str7c);
-        galaxyarrayrandom[numberrandom].xyz[2] = atof(str8c);
+        string str1,str2,str3,str4;
+        const char  *str1c, *str2c, *str3c, *str4c;
+        is >> str1 >> str2 >> str3 >> str4;
+        str2c = str2.c_str();
+        str3c = str3.c_str();
+        str4c = str4.c_str();
+        galaxyarrayrandom[numberrandom].xyz[0] = atof(str2c);
+        galaxyarrayrandom[numberrandom].xyz[1] = atof(str3c);
+        galaxyarrayrandom[numberrandom].xyz[2] = atof(str4c);
         numberrandom += 1;
     }
 

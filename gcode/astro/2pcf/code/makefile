@@ -6,3 +6,9 @@ tools.o : tools.h tools.cpp
 
 2pcfv1.o : tools.h 2pcfv1.cpp
 	g++ -c 2pcfv1.cpp -o 2pcfv1.o
+
+selectgalaxy : tools.o selectgalaxy.o
+	g++ selectgalaxy.o tools.o -o selectgalaxy -std=c++11
+
+selectgalaxy.o : tools.h selectgalaxy.cpp
+	g++ -c selectgalaxy.cpp -o selectgalaxy.o
