@@ -24,7 +24,7 @@ int main()
         probabilityarray[i]  = 0;
     }
     //has multiply all the things but not normalization
-    probabilityarray(luminosity_integral_array,min_log_L,delta_log_L,n,alpha,log_L_star,phi_star);
+    initprobabilityarray(luminosity_integral_array,min_log_L,delta_log_L,n,alpha,log_L_star,phi_star);
     galaxynumber = floor(probabilityarray[n]);
     normalfactor = probabilityarray[n];
     for (int i = 0; i < n+1; i++)
@@ -47,7 +47,8 @@ int main()
         galaxyarray[i].xyz[0] = x_min + (x_max-x_min)*xrandom;
         galaxyarray[i].xyz[1] = y_min + (y_max-y_min)*yrandom;
         galaxyarray[i].xyz[2] = z_min + (z_max-z_min)*zrandom;
-        log_L = findinlog_Ltable(normalprobability)
+        log_L = findinlog_Ltable(normalprobability,log_Lrandom);
+	galaxyarray[i].luminosity = pow(10,log_L);
     }
     free(galaxyarray);
     return 0;

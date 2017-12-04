@@ -282,6 +282,16 @@ void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp)
     return;
 }
 
+void initprobabilityarray(double *luminosity_integral_array,double min_log_L, double delta_log_L, long n, double alpha, double log_L_star, double phi_star)
+{
+	long N = n+1;
+	for (long i = 0; i < N; i++)
+	{
+		if (i == 0)
+		{
+			
+}
+
 void initredtortable(double bg, double ed, int n, redtor *redtorarray,double H_0,double c)
 {
     double interval, step;
