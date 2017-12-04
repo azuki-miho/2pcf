@@ -15,7 +15,7 @@ int main()
     double delta_log_L = (max_log_L-min_log_L)/n;
     double normalfactor;
     double x_min=0, x_max=1000, y_min = 0, y_max = 1000, z_min = 0, z_max = 1000;
-    long randomaccuracyi=10000;
+    long randomaccuracy=10000;
     double probabilityarray[n+1];               //This shows the intergral probability for logL
     double normalprobabilityarray[n+1];         //This is the normal probability array
     galaxy *galaxyarray;
@@ -24,8 +24,9 @@ int main()
         probabilityarray[i]  = 0;
     }
     //has multiply all the things but not normalization
-    initprobabilityarray(luminosity_integral_array,min_log_L,delta_log_L,n,alpha,log_L_star,phi_star);
+    initprobabilityarray(probabilityarray,min_log_L,delta_log_L,n,alpha,log_L_star);
     galaxynumber = floor(probabilityarray[n]);
+/*
     normalfactor = probabilityarray[n];
     for (int i = 0; i < n+1; i++)
     {
@@ -47,9 +48,10 @@ int main()
         galaxyarray[i].xyz[0] = x_min + (x_max-x_min)*xrandom;
         galaxyarray[i].xyz[1] = y_min + (y_max-y_min)*yrandom;
         galaxyarray[i].xyz[2] = z_min + (z_max-z_min)*zrandom;
-        log_L = findinlog_Ltable(normalprobability,log_Lrandom);
+        log_L = findinlog_Ltable(normalprobabilityarray,log_Lrandom);
 	galaxyarray[i].luminosity = pow(10,log_L);
     }
+*/
     free(galaxyarray);
     return 0;
 }

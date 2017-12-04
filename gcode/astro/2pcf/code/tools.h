@@ -47,6 +47,8 @@ long findgals1dlftedge(double x, galaxy1d *xa, long n);
 
 long findgals1drtedge(double x, galaxy1d *xa, long);
 
+double findinlog_Ltable(double *normalprobabilityarray, double log_Lrandom, long n);
+
 double findinredtortable(redtor * redtorarray, long n, double z);
 
 void galintersect(vector<long> &gals1, vector<long> &gals2, vector<long> &galsi);
@@ -54,6 +56,8 @@ void galintersect(vector<long> &gals1, vector<long> &gals2, vector<long> &galsi)
 void galaxysphtocar(double * raarray, double * decarray, double * rarray, galaxy *galarray, long n);
 
 void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp);
+
+void initprobabilityarray(double *probabilityarray, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star); 
 
 void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_0, double c);
 

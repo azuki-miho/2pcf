@@ -12,3 +12,9 @@ selectgalaxy : tools.o selectgalaxy.o
 
 selectgalaxy.o : tools.h selectgalaxy.cpp
 	g++ -c selectgalaxy.cpp -o selectgalaxy.o
+
+generaterandom : tools.o generaterandom.o
+	g++ generaterandom.o tools.o -o generaterandom -std=c++11
+
+generaterandom.o : tools.h generaterandom.cpp
+	g++ -c generaterandom.cpp -o generaterandom.o
