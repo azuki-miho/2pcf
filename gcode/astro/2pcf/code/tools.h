@@ -18,6 +18,7 @@ struct galaxy
 {
     double xyz[3];
     long locorder[3];
+    double luminosity;
 };
 
 struct redtor
