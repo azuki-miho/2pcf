@@ -14,7 +14,8 @@ int main()
     double min_log_L = 7.8, max_log_L = 11.0;
     double delta_log_L = (max_log_L-min_log_L)/n;
     double normalfactor;
-    double x_min=0, x_max=1000, y_min = 0, y_max = 1000, z_min = 0, z_max = 1000;
+    double x_min=0, x_max=500, y_min = 0, y_max = 500, z_min = 0, z_max = 500;
+    double volumn = (x_max-x_min)*(y_max-y_min)*(z_max-z_min);
     long randomaccuracy=10000;
     double probabilityarray[n+1];               //This shows the intergral probability for logL
     double normalprobabilityarray[n+1];         //This is the normal probability array
@@ -24,34 +25,33 @@ int main()
         probabilityarray[i]  = 0;
     }
     //has multiply all the things but not normalization
-    initprobabilityarray(probabilityarray,min_log_L,delta_log_L,n,alpha,log_L_star);
-    galaxynumber = floor(probabilityarray[n]);
-/*
+    initprobabilityarrayv1(probabilityarray,min_log_L,delta_log_L,n,alpha,log_L_star);
+    galaxynumber = floor(probabilityarray[n]*phi_star*volumn);
+    galaxynumber = 1000;
+    //galaxynumber = floor(probabilityarray[n]*log(10)*phi_star*volumn); //suitable for initprobabilityarrayv2
+//    cout << galaxynumber << endl;
     normalfactor = probabilityarray[n];
     for (int i = 0; i < n+1; i++)
     {
         normalprobabilityarray[i] = probabilityarray[i]/normalfactor;
     }
     galaxyarray = (galaxy*)malloc(sizeof(galaxy)*galaxynumber);
+    srand(time(NULL));
     for (int i = 0; i < galaxynumber; i++)
     {
         double xrandom, yrandom, zrandom, log_Lrandom;
         double log_L;
-        srand(time(0));
-        xrandom = (double)(rand()%randomaccuracy)*randomaccuracy;
-        srand(time(0));
-        yrandom = (double)(rand()%randomaccuracy)*randomaccuracy;
-        srand(time(0));
-        zrandom = (double)(rand()%randomaccuracy)*randomaccuracy;
-        srand(time(0));
-        log_Lrandom = (double)(rand()%randomaccuracy)*randomaccuracy;
+        xrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+        yrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+        zrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+        log_Lrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+//        cout << log_Lrandom << endl;
         galaxyarray[i].xyz[0] = x_min + (x_max-x_min)*xrandom;
         galaxyarray[i].xyz[1] = y_min + (y_max-y_min)*yrandom;
         galaxyarray[i].xyz[2] = z_min + (z_max-z_min)*zrandom;
-        log_L = findinlog_Ltable(normalprobabilityarray,log_Lrandom);
-	galaxyarray[i].luminosity = pow(10,log_L);
+        log_L = min_log_L + findinlog_Ltable(normalprobabilityarray,log_Lrandom,n)*delta_log_L;
+        galaxyarray[i].luminosity = pow(10,log_L);
     }
-*/
     free(galaxyarray);
     return 0;
 }

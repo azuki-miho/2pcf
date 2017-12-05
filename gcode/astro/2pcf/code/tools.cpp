@@ -217,15 +217,15 @@ long findgals1drtedge(double x, galaxy1d *xa, long n)
 
 double findinlog_Ltable(double *npa, double log_Lrandom, long n) //npa short for normalprobabilityarray and n times delta_log_L is the difference
 {
-    long N = n+1;
+    long N = n-1;
     if (log_Lrandom <= npa[0])
     {
-        return npa[0];
+        return 0;
     }
     else
     {
         long maxN, minN, midN;
-        minN = N; minN = 0; midN = (long)(N/2);
+        maxN = N; minN = 0; midN = (long)(N/2);
         while (maxN-minN > 1)
         {
             if (log_Lrandom <= npa[midN])
@@ -239,7 +239,8 @@ double findinlog_Ltable(double *npa, double log_Lrandom, long n) //npa short for
                 midN = (long)((minN+maxN)/2);
             }
         }
-        return npa[maxN];
+//        cout << maxN << endl;
+        return maxN;
     }
 }
 
@@ -310,7 +311,7 @@ void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp)
     return;
 }
 
-void initprobabilityarray(double *luminosity_integral_array, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star)
+void initprobabilityarrayv1(double *probabilityarray, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star)
 {
     long N = n+1;
     double exponent_outer = alpha + 1;
@@ -320,15 +321,39 @@ void initprobabilityarray(double *luminosity_integral_array, double min_log_L, d
         double exponent_inner = log_L_tmp - log_L_star;
         if (i == 0)
         {
-            luminosity_integral_array[i] = pow(10,exponent_inner*exponent_outer+log_L_tmp)*pow(M_E,-exponent_inner)*delta_log_L;
+            probabilityarray[i] = pow(10,exponent_inner*exponent_outer)*pow(M_E,-pow(10,exponent_inner))*delta_log_L;
+            cout << pow(10,exponent_inner*exponent_outer) << endl;
+            cout << pow(M_E,exponent_inner) << endl;
+            cout << delta_log_L << endl;
+            cout << probabilityarray[i] << endl;
         }
         else
         {
-            luminosity_integral_array[i] = pow(10,exponent_inner*exponent_outer+log_L_tmp)*pow(M_E,-exponent_inner)*delta_log_L + luminosity_integral_array[i];
+            probabilityarray[i] = pow(10,exponent_inner*exponent_outer)*pow(M_E,-pow(10,exponent_inner))*delta_log_L + probabilityarray[i-1];
         }
     }
     return;
-			
+}
+
+void initprobabilityarrayv2(double *probabilityarray, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star)
+{
+    long N = n+1;
+    double exponent_outer = alpha + 1;
+    for (long i = 0; i < N; i++)
+    {
+        double log_L_tmp = min_log_L + i*delta_log_L;
+        double exponent_inner = log_L_tmp - log_L_star;
+        if (i == 0)
+        {
+            probabilityarray[i] = pow(10,exponent_inner*exponent_outer+log_L_tmp)*pow(M_E,-pow(10,exponent_inner))*delta_log_L;
+        }
+        else
+        {
+            probabilityarray[i] = pow(10,exponent_inner*exponent_outer+log_L_tmp)*pow(M_E,-pow(10,exponent_inner))*delta_log_L + probabilityarray[i-1];
+        }
+    }
+    return;
+
 }
 
 void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_0, double c)

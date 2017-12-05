@@ -57,7 +57,9 @@ void galaxysphtocar(double * raarray, double * decarray, double * rarray, galaxy
 
 void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp);
 
-void initprobabilityarray(double *probabilityarray, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star); 
+void initprobabilityarrayv1(double *probabilityarray, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star);
+
+void initprobabilityarrayv2(double *probabilityarray, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star);
 
 void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_0, double c);
 
