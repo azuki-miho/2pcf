@@ -390,6 +390,40 @@ void inittpcf(double **tpcf, int rpin, int  rpn)
     return;
 }
 
+double linearinterpolate(double *xvalue, double *yvalue, long n, double x_0)
+{
+    cout << xvalue[0] << endl;
+    cout << xvalue[n-1] << endl;
+    cout << x_0 << endl;
+    if (x_0 < xvalue[0] || x_0 > xvalue[n-1])
+    {
+        cout << "exceed range in linearinterpolate" << endl;
+        return 0;
+    }
+    else
+    {
+        long minN = 0;
+        long maxN = n-1;
+        long midN = floor((minN+maxN)/2);
+        while ((maxN-minN) >= 2)
+        {
+            if (xvalue[midN] > x_0)
+            {
+                maxN = midN;
+                midN = floor((minN+maxN)/2);
+            }
+            else
+            {
+                minN = midN;
+                midN = floor((minN+maxN)/2);
+            }
+        }
+        double ret;
+        ret = yvalue[minN] + (x_0-xvalue[minN])*(yvalue[maxN]-yvalue[minN])/(xvalue[maxN]-xvalue[minN]);
+        return ret;
+    }
+}
+
 void quicksortgalaxy1d(galaxy1d *galo, galaxy *galarray, long n, long befnum, int xyzp)
 {
     if (n >= 2)

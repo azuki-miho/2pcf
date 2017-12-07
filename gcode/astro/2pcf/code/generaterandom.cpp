@@ -16,7 +16,7 @@ int main()
     double normalfactor;
     double x_min=0, x_max=500, y_min = 0, y_max = 500, z_min = 0, z_max = 500;
     double volumn = (x_max-x_min)*(y_max-y_min)*(z_max-z_min);
-    long randomaccuracy=10000;
+//    long randomaccuracy=10000;
     double probabilityarray[n+1];               //This shows the intergral probability for logL
     double normalprobabilityarray[n+1];         //This is the normal probability array
     galaxy *galaxyarray;
@@ -41,10 +41,14 @@ int main()
     {
         double xrandom, yrandom, zrandom, log_Lrandom;
         double log_L;
-        xrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
-        yrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
-        zrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
-        log_Lrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+//        xrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+//        yrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+//        zrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+//        log_Lrandom = (double)(rand()%(randomaccuracy+1))/randomaccuracy;
+        xrandom = (double)(rand())/(RAND_MAX);
+        yrandom = (double)(rand())/(RAND_MAX);
+        zrandom = (double)(rand())/(RAND_MAX);
+        log_Lrandom = (double)(rand())/(RAND_MAX);
 //        cout << log_Lrandom << endl;
         galaxyarray[i].xyz[0] = x_min + (x_max-x_min)*xrandom;
         galaxyarray[i].xyz[1] = y_min + (y_max-y_min)*yrandom;

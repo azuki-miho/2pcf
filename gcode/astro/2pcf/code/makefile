@@ -18,3 +18,9 @@ generaterandom : tools.o generaterandom.o
 
 generaterandom.o : tools.h generaterandom.cpp
 	g++ -c generaterandom.cpp -o generaterandom.o
+
+log_linear : log_linear.o tools.o
+	g++ log_linear.o tools.o -o log_linear -std=c++11
+
+log_linear.o : tools.h log_linear.cpp
+	g++ -c log_linear.cpp -o log_linear.o
