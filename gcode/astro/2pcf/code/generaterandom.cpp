@@ -56,6 +56,7 @@ int main()
         log_L = min_log_L + findinlog_Ltable(normalprobabilityarray,log_Lrandom,n)*delta_log_L;
         galaxyarray[i].luminosity = pow(10,log_L);
     }
+    cout << RAND_MAX << endl;
     free(galaxyarray);
     return 0;
 }
