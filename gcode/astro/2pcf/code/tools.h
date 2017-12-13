@@ -72,7 +72,11 @@ void quicksortgalaxy1d(galaxy1d *galo, galaxy *galarray,long n, long befnum, int
 
 void quicksortgals(vector<long>::iterator bg, long n);
 
+void radecrtoxyz(galaxy *galarr, long n);
+
 double redshift(double z);
 
 double trapequadrature(double bottom, double top, int n, double (*f)(double));
+
+void xyztoradecr(galaxy* galarr, long n);
 #endif
