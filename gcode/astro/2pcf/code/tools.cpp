@@ -503,6 +503,17 @@ double trapequadrature(double bottom, double top, int n, double (*f)(double))
     return sum;
 }
 
+void xyztoradecr(galaxy *galaxyarr, long n)
+{
+    for (long i = 0; i < n; i++)
+    {
+        double ra, dec, r, x, y, z;
+        x = galaxyarr[i].xyz[0];
+        y = galaxyarr[i].xyz[1];
+        z = galaxyarr[i].xyz[2];
+    }
+}
+
 /*
 double test(double x)
 {

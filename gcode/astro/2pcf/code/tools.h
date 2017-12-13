@@ -17,6 +17,7 @@ struct galaxy1d
 struct galaxy
 {
     double xyz[3];
+    double radecr[3];
     long locorder[3];
     double luminosity;
 };
