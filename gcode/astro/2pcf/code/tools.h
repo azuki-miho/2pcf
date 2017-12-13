@@ -66,6 +66,8 @@ void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_
 
 void inittpcf(double **tpcf, int rpin, int rpn);
 
+double linearinterpolate(double *xvalue, double *yvalue, long n, double x_0);
+
 void quicksortgalaxy1d(galaxy1d *galo, galaxy *galarray,long n, long befnum, int xyz);
 
 void quicksortgals(vector<long>::iterator bg, long n);
