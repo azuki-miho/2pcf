@@ -7,7 +7,7 @@
 #include<vector>
 #include "tools.h"
 
-#define H_0 69.7
+#define H_0 100
 #define c 299792.458
 
 using namespace std;

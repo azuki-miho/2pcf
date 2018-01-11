@@ -27,11 +27,19 @@ struct redtor
     double r;
 };
 
+struct rtored
+{
+    double r;
+    double red;
+};
+
 void addarraytotpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double x1, double y1, double z1,galaxy *gala2, vector<long> &gals);
 
 void addtotpcfv1(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp);
 
 void addtotpcfv2(double **tpcf, double rpirange, double rprange, int rpin, int rpn, double rpi, double rp);
+
+double calculateapparentm(double luminosity, double red, double r);
 
 void calculatetpcf(double **tpcf, double rpirange,double rprange, int rpin, int rpn, galaxy *gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2);
 
@@ -49,7 +57,9 @@ long findgals1drtedge(double x, galaxy1d *xa, long);
 
 double findinlog_Ltable(double *normalprobabilityarray, double log_Lrandom, long n);
 
-double findinredtortable(redtor * redtorarray, long n, double z);
+double findinredtortable(redtor *redtorarray, long n, double red);
+
+double findinrtoredtable(rtored *rtoredarray, long n, double r);
 
 void galintersect(vector<long> &gals1, vector<long> &gals2, vector<long> &galsi);
 
@@ -64,6 +74,8 @@ void initprobabilityarrayv2(double *probabilityarray, double min_log_L, double d
 void initredtortable(double bg, double ed, int n, redtor *redtorarray, double H_0, double c);
 
 void inittpcf(double **tpcf, int rpin, int rpn);
+
+void invredtortable(redtor *redtorarray, rtored *rtoredarray, long n, double redstep);
 
 double linearinterpolate(double *xvalue, double *yvalue, long n, double x_0);
 

@@ -24,3 +24,9 @@ log_linear : log_linear.o tools.o
 
 log_linear.o : tools.h log_linear.cpp
 	g++ -c log_linear.cpp -o log_linear.o
+
+ztor : tools.o ztor.o
+	g++ ztor.o tools.o -o ztor -std=c++11
+
+ztor.o : tools.h ztor.cpp
+	g++ -c ztor.cpp -o ztor.o

@@ -62,6 +62,15 @@ void addtotpcfv2(double **tpcf, double rpirange, double rprange, int rpin, int r
     return;
 }
 
+double calculateapparentm(double luminosity, double red, double r)
+{
+    double apparentm;
+    double Dm = 5*log10(r) + 25;
+    double k_z = 2.5*log10((red+0.9)/1.1);
+    apparentm = -2.5*log10(luminosity) + 4.76 + Dm + k_z - 1.62*(red-0.1);
+    return apparentm;
+}
+
 void calculatetpcf(double **tpcf, double rpirange, double rprange, int rpin, int rpn, galaxy * gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2)
 {
     for (int i = 0; i < n1; i++)
@@ -244,7 +253,7 @@ double findinlog_Ltable(double *npa, double log_Lrandom, long n) //npa short for
     }
 }
 
-double findinredtortable(redtor * redtorarray, long n, double z)
+double findinredtortable(redtor * redtorarray, long n, double red)
 {
 /*    if (z > 0.12 || z < 0.01)
     {
@@ -253,17 +262,33 @@ double findinredtortable(redtor * redtorarray, long n, double z)
 */
     long left, right;
     double r;
-    left = floor((z-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
-    right = ceil((z-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
+    left = floor((red-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
+    right = ceil((red-redtorarray[0].red)/(redtorarray[n].red-redtorarray[0].red)*n);
     if (left == right)
     {
         r = redtorarray[left].r;
     }
     else
     {
-        r = (z-redtorarray[left].red)/(redtorarray[right].red-redtorarray[left].red)*(redtorarray[right].r-redtorarray[left].r)+redtorarray[left].r;
+        r = (red-redtorarray[left].red)/(redtorarray[right].red-redtorarray[left].red)*(redtorarray[right].r-redtorarray[left].r)+redtorarray[left].r;
     }
     return r;
+}
+
+double findinrtoredtable(rtored *rtoredarray, long n, double r)
+{
+    long left, right;
+    double red;
+    left = floor((r-rtoredarray[0].r)/(rtoredarray[n].r-rtoredarray[0].r)*n);
+    right = ceil((r-rtoredarray[0].r)/(rtoredarray[n].r-rtoredarray[0].r)*n);
+    if (left == right)
+    {
+        red = rtoredarray[left].red;
+    }
+    else
+    {
+        red = (r-rtoredarray[left].r)/(rtoredarray[right].r-rtoredarray[left].r)*(rtoredarray[right].red-rtoredarray[left].red)+rtoredarray[left].red;
+    }
 }
 
 void galaxysphtocar(double * raarray,double * decarray, double * rarray, galaxy *galarray,long n)
@@ -322,10 +347,10 @@ void initprobabilityarrayv1(double *probabilityarray, double min_log_L, double d
         if (i == 0)
         {
             probabilityarray[i] = pow(10,exponent_inner*exponent_outer)*pow(M_E,-pow(10,exponent_inner))*delta_log_L;
-            cout << pow(10,exponent_inner*exponent_outer) << endl;
-            cout << pow(M_E,exponent_inner) << endl;
-            cout << delta_log_L << endl;
-            cout << probabilityarray[i] << endl;
+//            cout << pow(10,exponent_inner*exponent_outer) << endl;
+//            cout << pow(M_E,exponent_inner) << endl;
+//            cout << delta_log_L << endl;
+//            cout << probabilityarray[i] << endl;
         }
         else
         {
@@ -386,6 +411,29 @@ void inittpcf(double **tpcf, int rpin, int  rpn)
         {
             tpcf[i][j] = 0;
         }
+    }
+    return;
+}
+
+void invredtortable(redtor *redtorarray, rtored *rtoredarray, long n, double redstep)
+{
+    double rstep;
+    rtoredarray[0].r = redtorarray[0].r;
+    rtoredarray[n].r = redtorarray[n].r;
+    rstep = (rtoredarray[n].r-rtoredarray[0].r)/n;
+    for (long i = 1; i < n; i++)
+    {
+        rtoredarray[i].r = rtoredarray[i-1].r + rstep;
+    }
+    rtoredarray[0].red = redtorarray[0].red;
+    rtoredarray[n].red = redtorarray[n].red;
+    for (long i = 1, j = 1; i < n; i++ )
+    {
+        while (rtoredarray[i].r > redtorarray[j].r)
+        {
+            j++;
+        }
+        rtoredarray[i].red = redtorarray[j-1].red + (rtoredarray[i].r-redtorarray[j-1].r)/rstep*redstep;
     }
     return;
 }
