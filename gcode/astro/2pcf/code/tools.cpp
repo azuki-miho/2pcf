@@ -567,6 +567,21 @@ void quicksortgals(vector<long>::iterator bg, long n)
     return;
 }
 
+void radecrtoxyz(galaxy *galarr, long n)
+{
+    for (long i = 0; i < n; i++)
+    {
+        double R_ra, R_dec, r;
+        R_ra = galarr[i].radecr[0]*M_PI/180.;
+        R_dec = galarr[i].radecr[1]*M_PI/180.;
+        r = galarr[i].radecr[2];
+        galarr[i].xyz[0] = ra*cos(R_dec)*cos(R_ra);
+        galarr[i].xyz[1] = ra*cos(R_dec)*sin(R_ra);
+        galarr[i].xyz[2] = ra*sin(R_dec);
+    }
+    return;
+}
+
 double redshift(double z)
 {
     double OmegaLambda = 0.718, Omegam = 0.282;
@@ -583,6 +598,50 @@ double trapequadrature(double bottom, double top, int n, double (*f)(double))
     }
     sum += (f(bottom)+f(top))*step/2;
     return sum;
+}
+
+void xyztoradecr(galaxy *galyarr, long n)
+{
+    for (long i = 0; i < n; i++)
+    {
+        double ra, dec, r, x, y, z;
+        x = galarr[i].xyz[0];
+        y = galarr[i].xyz[1];
+        z = galarr[i].xyz[2];
+        r = pow(x*x+y*y+z*z,0.5);
+        dec = acos(pow(x*x+y*y,0.5)/r)*180./M_PI;
+        if (z <= 0)
+        {
+            dec = -dec;
+        }
+        ra = asin(abs(x)/pow(x*x+y*y,0.5))*180./M_PI;
+        if (x >= 0)
+        {
+            if (y >= 0)
+            {
+                ra = ra;
+            }
+            else
+            {
+                ra = 360 - ra;
+            }
+        }
+        else
+        {
+            if (y >= 0)
+            {
+                ra = 180 - ra;
+            }
+            else
+            {
+                ra = 180 + ra;
+            }
+        }
+        galarr[i].radecr[0] = ra;
+        galarr[i].radecr[1] = dec;
+        galarr[i].radecr[2] = r;
+    }
+    return;
 }
 
 /*
