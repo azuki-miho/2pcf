@@ -22,6 +22,14 @@ struct galaxy
     double luminosity;
 };
 
+struct galaxyv2
+{
+    double xyz[3];
+    double radecr[3];
+    galaxyv2 *next;
+    double luminosity;
+};
+
 struct redtor
 {
     double red;
@@ -43,6 +51,8 @@ void addtotpcfv2(double **tpcf, double rpirange, double rprange, int rpin, int r
 double calculateapparentm(double luminosity, double red, double r);
 
 void calculatetpcf(double **tpcf, double rpirange,double rprange, int rpin, int rpn, galaxy *gala1, long n1, galaxy *gala2, galaxy1d *xa2, galaxy1d *ya2, galaxy1d *za2, long n2);
+
+void calculatetpcfv2(double **tpcf, double rpirange,double  rprange,int rpin, int rpn, galaxyv2 *galaxyarray, long totalnumber, galaxyv2 ****box, double xmin, double ymin, double zmin, double xstep, double ystep, double zstep, long xnum, long ynum, long znum);
 
 void filltpcf(double **tpcf, int rpin, int rpn);
 
@@ -66,7 +76,11 @@ void galintersect(vector<long> &gals1, vector<long> &gals2, vector<long> &galsi)
 
 void galaxysphtocar(double * raarray, double * decarray, double * rarray, galaxy *galarray, long n);
 
+void galaxysphtocar(double * raarray, double * decarray, double * rarray, galaxyv2 *galarray, long n);
+
 void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp);
+
+void initlinklist(galaxyv2 ****box, double xmin, double ymin, double zmin, double xstep, double ystep, double zstep, galaxyv2 *galaxyarray, long totalnumber);
 
 void initprobabilityarrayv1(double *probabilityarray, double min_log_L, double delta_log_L, long n, double alpha, double log_L_star);
 

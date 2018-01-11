@@ -102,21 +102,19 @@ void calculatetpcfv2(double **tpcf, double rpirange, double rprange, int rpin, i
         int yi_ed = (tempyn+deltayn < ynum-1) ? tempyn+deltayn : ynum-1;
         int zi_bg = (tempzn-deltazn > 0) ? tempzn-deltazn : 0;
         int zi_ed = (tempzn+deltazn < znum-1) ? tempzn+deltazn : znum-1;
-        for (int xi = xi_bg; xi <= xi_ed; xi++)
+        for (int xi = xi_bg; i <= xi_ed; xi++)
         {
-            for (int yi = yi_bg; yi <= yi_ed; yi++)
+            for (int yi = yi_bg; i <= yi_ed; yi++)
             {
-                for (int zi = zi_bg; zi <= zi_ed; zi++)
+                for (int zi = zi_bg; i <= zi_ed; zi++)
                 {
                     tempgalaxyptr = box[xi][yi][zi];
                     while (tempgalaxyptr != NULL)
                     {
-                        tempx2 = tempgalaxyptr[0].xyz[0];
-                        tempy2 = tempgalaxyptr[0].xyz[1];
-                        tempz2 = tempgalaxyptr[0].xyz[2];
-//                        cout << 8 << endl;
+                        tempx2 = tempgalaxyptr->xyz[0];
+                        tempy2 = tempgalaxyptr->xyz[1];
+                        tempz2 = tempgalaxyptr->xyz[2];
                         double lx, ly, lz, sx, sy, sz;
-//                        cout << xi << " " << yi << " " << zi << endl;
                         lx = tempx2+tempx1; ly = tempy2+tempy1; lz = tempz2+tempz1;
                         sx = tempx2-tempx1; sy = tempy2-tempy1; sz = tempz2-tempz1;
                         rpi = (lx*sx+ly*sy+lz*sz)/sqrt(lx*lx+ly*ly+lz*lz);
@@ -126,13 +124,12 @@ void calculatetpcfv2(double **tpcf, double rpirange, double rprange, int rpin, i
                         addtotpcfv1(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
 //                      addtotpcfv2(tpcf,rpirange,rprange,rpin,rpn,rpi,rp);
                         }
-                        tempgalaxyptr = tempgalaxyptr[0].next;
+                        tempgalaxyptr = tempgalaxyptr->next;
                     }
                 }
             }
         }
     }
-    return;
 }
 
 void filltpcf(double **tpcf,int rpin, int rpn)
@@ -354,17 +351,6 @@ void galaxysphtocar(double * raarray,double * decarray, double * rarray, galaxy 
     return;
 }
 
-void galaxysphtocar(double * raarray,double * decarray, double * rarray, galaxyv2 *galarray,long n)
-{
-    for (long i = 0; i < n; i++)
-    {
-        galarray[i].xyz[0] = rarray[i]*cos(decarray[i]*M_PI/180.)*cos(raarray[i]*M_PI/180.);
-        galarray[i].xyz[1] = rarray[i]*cos(decarray[i]*M_PI/180.)*sin(raarray[i]*M_PI/180.);
-        galarray[i].xyz[2] = rarray[i]*sin(decarray[i]*M_PI/180.);
-    }
-    return;
-}
-
 void galintersect(vector<long> &gals1, vector<long> &gals2, vector<long> &galsi)
 {
     long n1, n2;
@@ -399,11 +385,10 @@ void init1darray(galaxy1d *g1d, galaxy *galarray, long n, int xyzp)
     return;
 }
 
-void initlinklist(galaxyv2 ****box, double xmin, double ymin, double zmin, double xstep, double ystep, double zstep, galaxyv2 *galaxyarray, long totalnumber)
+void initlinklist(galaxyv2 ****box, double xmin, double ymin, double zmin, double xstep, double ystep, double zstep, galaxyv2* galaxyarray, long totalnumber)
 {
     double tempx, tempy, tempz;
     long tempxn, tempyn, tempzn;
-    galaxyv2 *tempgalaxy;
     for (long i = 0; i < totalnumber; i++)
     {
         tempx = galaxyarray[i].xyz[0];
@@ -412,17 +397,14 @@ void initlinklist(galaxyv2 ****box, double xmin, double ymin, double zmin, doubl
         tempxn = floor((tempx-xmin)/xstep);
         tempyn = floor((tempy-ymin)/ystep);
         tempzn = floor((tempz-zmin)/zstep);
-//        box[tempxn][tempyn][tempzn] = (galaxyv2*)&(galaxyarray[i]);
         if (box[tempxn][tempyn][tempzn] == NULL)
         {
-            box[tempxn][tempyn][tempzn] = (galaxyv2*)&(galaxyarray[i]);
+            box[tempxn][tempyn][tempzn] = galaxyarray + i;
         }
         else
         {
             galaxyarray[i].next = box[tempxn][tempyn][tempzn];
-//            tempgalaxy = box[tempxn][tempyn][tempzn];
-            box[tempxn][tempyn][tempzn] = (galaxyv2*)&(galaxyarray[i]);
-//            galaxyarray[i].next = tempgalaxy;
+            box[tempxn][tempyn][tempzn] = galaxyarray + i;
         }
     }
     return;
@@ -667,9 +649,9 @@ void radecrtoxyz(galaxy *galarr, long n)
         R_ra = galarr[i].radecr[0]*M_PI/180.;
         R_dec = galarr[i].radecr[1]*M_PI/180.;
         r = galarr[i].radecr[2];
-        galarr[i].xyz[0] = r*cos(R_dec)*cos(R_ra);
-        galarr[i].xyz[1] = r*cos(R_dec)*sin(R_ra);
-        galarr[i].xyz[2] = r*sin(R_dec);
+        galarr[i].xyz[0] = ra*cos(R_dec)*cos(R_ra);
+        galarr[i].xyz[1] = ra*cos(R_dec)*sin(R_ra);
+        galarr[i].xyz[2] = ra*sin(R_dec);
     }
     return;
 }
@@ -692,7 +674,7 @@ double trapequadrature(double bottom, double top, int n, double (*f)(double))
     return sum;
 }
 
-void xyztoradecr(galaxy *galarr, long n)
+void xyztoradecr(galaxy *galyarr, long n)
 {
     for (long i = 0; i < n; i++)
     {
