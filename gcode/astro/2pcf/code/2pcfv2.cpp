@@ -37,7 +37,7 @@ int main()
     double xmin_data, xmax_data, ymin_data, ymax_data, zmin_data, zmax_data;
     double xmin_random, xmax_random, ymin_random, ymax_random, zmin_random, zmax_random;
     double tempx, tempy, tempz;
-    double box_xstep=10, box_ystep=10, box_zstep=10;
+    double box_xstep=5, box_ystep=5, box_zstep=5;
     long box_xnum_data, box_ynum_data, box_znum_data;
     long box_xnum_random, box_ynum_random, box_znum_random;
     galaxyv2 *galaxyarraydata;
@@ -214,8 +214,8 @@ int main()
     cout << check << endl;
 */
     calculatetpcfv2(tpcfdd,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,box_data,xmin_data,ymin_data,zmin_data,box_xstep,box_ystep,box_zstep,box_xnum_data,box_ynum_data,box_znum_data);
-    calculatetpcfv2(tpcfrr,rpirange,rprange,rpin,rpn,galaxyarrayrandom,totalnumberrandom,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
-    calculatetpcfv2(tpcfdr,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
+//    calculatetpcfv2(tpcfrr,rpirange,rprange,rpin,rpn,galaxyarrayrandom,totalnumberrandom,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
+//    calculatetpcfv2(tpcfdr,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
 
     filltpcf(tpcfdd,rpin,rpn);
     filltpcf(tpcfrr,rpin,rpn);
