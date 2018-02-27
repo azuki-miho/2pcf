@@ -4,14 +4,20 @@
 2pcfv2 : tools.o 2pcfv2.o
 	g++ 2pcfv2.o tools.o -o 2pcfv2 -std=c++11
 
+2pcfv2_1 : tools.o 2pcfv2_1.o
+	g++ -O3 2pcfv2_1.o tools.o -o 2pcfv2_1 -std=c++11
+
 tools.o : tools.h tools.cpp
-	g++ -c tools.cpp -o tools.o -std=c++11
+	g++ -O3 -c tools.cpp -o tools.o -std=c++11
 
 2pcfv1.o : tools.h 2pcfv1.cpp
 	g++ -c 2pcfv1.cpp -o 2pcfv1.o -std=c++11
 
 2pcfv2.o : tools.h 2pcfv2.cpp
 	g++ -c 2pcfv2.cpp -o 2pcfv2.o -std=c++11
+
+2pcfv2_1.o : tools.h 2pcfv2_1.cpp
+	g++ -O3 -c 2pcfv2_1.cpp -o 2pcfv2_1.o -std=c++11
 
 selectgalaxy : tools.o selectgalaxy.o
 	g++ selectgalaxy.o tools.o -o selectgalaxy -std=c++11

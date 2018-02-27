@@ -19,8 +19,8 @@ int main()
     ofstream outfiletpcfdata, outfiletpcf;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
     string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/randomSelect";
-    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20180227/20180227_tpcfv2data";
-    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180227/20180227_tpcfv2";
+    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20180301/20180301_tpcfv2data";
+    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180301/20180301_tpcfv2";
     infiledata.open(filedata.data());
     infilerandom.open(filerandom.data());
     outfiletpcfdata.open(filetpcfdata.data());
@@ -39,13 +39,17 @@ int main()
     double box_xstep=5, box_ystep=5, box_zstep=5;
     long box_xnum_data, box_ynum_data, box_znum_data;
     long box_xnum_random, box_ynum_random, box_znum_random;
+    galaxyv2 *galaxyarraydata0;
     galaxyv2 *galaxyarraydata;
+    galaxyv2 *galaxyarrayrandom0;
     galaxyv2 *galaxyarrayrandom;
     redtor * redtorarray;
     raarraydata = (double*)malloc(sizeof(double)*totalnumberdata);
     decarraydata = (double*)malloc(sizeof(double)*totalnumberdata);
     rarraydata = (double*)malloc(sizeof(double)*totalnumberdata);
+    galaxyarraydata0 = (galaxyv2*)malloc(sizeof(galaxyv2)*totalnumberdata);
     galaxyarraydata = (galaxyv2*)malloc(sizeof(galaxyv2)*totalnumberdata);
+    galaxyarrayrandom0 = (galaxyv2*)malloc(sizeof(galaxyv2)*totalnumberrandom);
     galaxyarrayrandom = (galaxyv2*)malloc(sizeof(galaxyv2)*totalnumberrandom);
     redtorarray = (redtor*)malloc(sizeof(redtor)*(redshiftn+1));
     initredtortable(bg,ed,redshiftn,redtorarray,H_0,c);
@@ -72,6 +76,7 @@ int main()
         decarraydata[numberdata] = atof(str5c);
 //        rarrayd[number] = trapequadrature(0,atof(str17c),200,redshift)/H_0;
         rarraydata[numberdata] = findinredtortable(redtorarray,redshiftn,atof(str17c));
+        galaxyarraydata0[numberdata].next = NULL;
         galaxyarraydata[numberdata].next = NULL;
 /*        if (number%1000 == 0)
         {
@@ -79,7 +84,7 @@ int main()
         }*/
         numberdata += 1;
     }
-    galaxysphtocar(raarraydata,decarraydata,rarraydata,galaxyarraydata,totalnumberdata);
+    galaxysphtocar(raarraydata,decarraydata,rarraydata,galaxyarraydata0,totalnumberdata);
     while (/*!infilerandom.eof()*/numberrandom<totalnumberrandom)
     {
         string s;
@@ -91,21 +96,22 @@ int main()
         str2c = str2.c_str();
         str3c = str3.c_str();
         str4c = str4.c_str();
-        galaxyarrayrandom[numberrandom].xyz[0] = atof(str2c);
-        galaxyarrayrandom[numberrandom].xyz[1] = atof(str3c);
-        galaxyarrayrandom[numberrandom].xyz[2] = atof(str4c);
+        galaxyarrayrandom0[numberrandom].xyz[0] = atof(str2c);
+        galaxyarrayrandom0[numberrandom].xyz[1] = atof(str3c);
+        galaxyarrayrandom0[numberrandom].xyz[2] = atof(str4c);
+        galaxyarrayrandom0[numberrandom].next = NULL;
         galaxyarrayrandom[numberrandom].next = NULL;
         numberrandom += 1;
     }
 //decide the range of this box
-    xmin_data = xmax_data = galaxyarraydata[0].xyz[0];
-    ymin_data = ymax_data = galaxyarraydata[0].xyz[1];
-    zmin_data = zmax_data = galaxyarraydata[0].xyz[2];
+    xmin_data = xmax_data = galaxyarraydata0[0].xyz[0];
+    ymin_data = ymax_data = galaxyarraydata0[0].xyz[1];
+    zmin_data = zmax_data = galaxyarraydata0[0].xyz[2];
     for (long i = 1; i < totalnumberdata; i++)
     {
-        tempx = galaxyarraydata[i].xyz[0];
-        tempy = galaxyarraydata[i].xyz[1];
-        tempz = galaxyarraydata[i].xyz[2];
+        tempx = galaxyarraydata0[i].xyz[0];
+        tempy = galaxyarraydata0[i].xyz[1];
+        tempz = galaxyarraydata0[i].xyz[2];
         xmin_data = (tempx < xmin_data) ? tempx : xmin_data;
         xmax_data = (tempx > xmax_data) ? tempx : xmax_data;
         ymin_data = (tempy < ymin_data) ? tempy : ymin_data;
@@ -120,14 +126,14 @@ int main()
     box_ynum_data = ceil((ymax_data-ymin_data)/box_ystep);
     box_znum_data = ceil((zmax_data-zmin_data)/box_zstep);
 
-    xmin_random = xmax_random = galaxyarrayrandom[0].xyz[0];
-    ymin_random = ymax_random = galaxyarrayrandom[0].xyz[1];
-    zmin_random = zmax_random = galaxyarrayrandom[0].xyz[2];
+    xmin_random = xmax_random = galaxyarrayrandom0[0].xyz[0];
+    ymin_random = ymax_random = galaxyarrayrandom0[0].xyz[1];
+    zmin_random = zmax_random = galaxyarrayrandom0[0].xyz[2];
     for (long i = 1; i < totalnumberrandom; i++)
     {
-        tempx = galaxyarrayrandom[i].xyz[0];
-        tempy = galaxyarrayrandom[i].xyz[1];
-        tempz = galaxyarrayrandom[i].xyz[2];
+        tempx = galaxyarrayrandom0[i].xyz[0];
+        tempy = galaxyarrayrandom0[i].xyz[1];
+        tempz = galaxyarrayrandom0[i].xyz[2];
         xmin_random = (tempx < xmin_random) ? tempx : xmin_random;
         xmax_random = (tempx > xmax_random) ? tempx : xmax_random;
         ymin_random = (tempy < ymin_random) ? tempy : ymin_random;
@@ -142,6 +148,54 @@ int main()
     box_ynum_random = ceil((ymax_random-ymin_random)/box_ystep);
     box_znum_random = ceil((zmax_random-zmin_random)/box_zstep);
 // generate the linklist
+    galaxyv2 ****box_data0;
+    box_data0 = (galaxyv2****)malloc(sizeof(galaxyv2***)*box_xnum_data);
+    for (long i = 0; i < box_xnum_data; i++)
+    {
+        box_data0[i] = (galaxyv2***)malloc(sizeof(galaxyv2**)*box_ynum_data);
+        for (long j = 0; j < box_ynum_data; j++)
+        {
+            box_data0[i][j] = (galaxyv2**)malloc(sizeof(galaxyv2*)*box_znum_data);
+            for (long k = 0; k < box_znum_data; k++)
+            {
+                box_data0[i][j][k] = NULL;
+            }
+        }
+    }
+    initlinklist(box_data0, xmin_data, ymin_data, zmin_data, box_xstep, box_ystep, box_zstep, galaxyarraydata0,totalnumberdata);
+    long tempi = 0;
+    galaxyv2 *tempgalaxyptr = NULL;
+    for (long i = 0; i < box_xnum_data; i++)
+    {
+        for (long j = 0; j < box_ynum_data; j++)
+        {
+            for (long k = 0; k < box_znum_data; k++)
+            {
+                tempgalaxyptr = box_data0[i][j][k];
+                for (;tempgalaxyptr != NULL;)
+                {
+                    galaxyarraydata[tempi].xyz[0]=tempgalaxyptr->xyz[0];
+                    galaxyarraydata[tempi].xyz[1]=tempgalaxyptr->xyz[1];
+                    galaxyarraydata[tempi].xyz[2]=tempgalaxyptr->xyz[2];
+                    galaxyarraydata[tempi].radecr[0]=tempgalaxyptr->radecr[0];
+                    galaxyarraydata[tempi].radecr[1]=tempgalaxyptr->radecr[1];
+                    galaxyarraydata[tempi].radecr[2]=tempgalaxyptr->radecr[2];
+                    tempgalaxyptr = tempgalaxyptr->next;
+                    tempi += 1;
+                }
+            }
+        }
+    }
+    cout << tempi << endl;
+    for (long i = 0; i < box_xnum_data; i++)
+    {
+        for (long j = 0; j < box_ynum_data; j++)
+        {
+            free(box_data0[i][j]);
+        }
+        free(box_data0[i]);
+    }
+    free(box_data0);
     galaxyv2 ****box_data;
     box_data = (galaxyv2****)malloc(sizeof(galaxyv2***)*box_xnum_data);
     for (long i = 0; i < box_xnum_data; i++)
@@ -157,6 +211,55 @@ int main()
         }
     }
     initlinklist(box_data, xmin_data, ymin_data, zmin_data, box_xstep, box_ystep, box_zstep, galaxyarraydata,totalnumberdata);
+
+    galaxyv2 ****box_random0;
+    box_random0 = (galaxyv2****)malloc(sizeof(galaxyv2***)*box_xnum_random);
+    for (long i = 0; i < box_xnum_random; i++)
+    {
+        box_random0[i] = (galaxyv2***)malloc(sizeof(galaxyv2**)*box_ynum_random);
+        for (long j = 0; j < box_ynum_random; j++)
+        {
+            box_random0[i][j] = (galaxyv2**)malloc(sizeof(galaxyv2*)*box_znum_random);
+            for (long k = 0; k < box_znum_random; k++)
+            {
+                box_random0[i][j][k] = NULL;
+            }
+        }
+    }
+    initlinklist(box_random0, xmin_random, ymin_random, zmin_random, box_xstep, box_ystep, box_zstep, galaxyarrayrandom0,totalnumberrandom);
+    tempi = 0;
+    tempgalaxyptr = NULL;
+    for (long i = 0; i < box_xnum_random; i++)
+    {
+        for (long j = 0; j < box_ynum_random; j++)
+        {
+            for (long k = 0; k < box_znum_random; k++)
+            {
+                tempgalaxyptr = box_random0[i][j][k];
+                for (;tempgalaxyptr != NULL;)
+                {
+                    galaxyarrayrandom[tempi].xyz[0]=tempgalaxyptr->xyz[0];
+                    galaxyarrayrandom[tempi].xyz[1]=tempgalaxyptr->xyz[1];
+                    galaxyarrayrandom[tempi].xyz[2]=tempgalaxyptr->xyz[2];
+                    galaxyarrayrandom[tempi].radecr[0]=tempgalaxyptr->radecr[0];
+                    galaxyarrayrandom[tempi].radecr[1]=tempgalaxyptr->radecr[1];
+                    galaxyarrayrandom[tempi].radecr[2]=tempgalaxyptr->radecr[2];
+                    tempgalaxyptr = tempgalaxyptr->next;
+                    tempi += 1;
+                }
+            }
+        }
+    }
+    cout << tempi << endl;
+    for (long i = 0; i < box_xnum_random; i++)
+    {
+        for (long j = 0; j < box_ynum_random; j++)
+        {
+            free(box_random0[i][j]);
+        }
+        free(box_random0[i]);
+    }
+    free(box_random0);
 
     galaxyv2 ****box_random;
     box_random = (galaxyv2****)malloc(sizeof(galaxyv2***)*box_xnum_random);
@@ -174,7 +277,7 @@ int main()
     }
 
     initlinklist(box_random, xmin_random, ymin_random, zmin_random, box_xstep, box_ystep, box_zstep, galaxyarrayrandom,totalnumberrandom);
-    double rprange = 20, rpirange = 20;
+    double rprange = 40, rpirange = 40;
     int rpn  = 40, rpin = 40;
     double **tpcfdd;
     double **tpcfrr;
@@ -214,8 +317,8 @@ int main()
 */
     timebegin = time(NULL);               //not necessary
     calculatetpcfv2(tpcfdd,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,box_data,xmin_data,ymin_data,zmin_data,box_xstep,box_ystep,box_zstep,box_xnum_data,box_ynum_data,box_znum_data);
-//    calculatetpcfv2(tpcfrr,rpirange,rprange,rpin,rpn,galaxyarrayrandom,totalnumberrandom,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
-//    calculatetpcfv2(tpcfdr,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
+    calculatetpcfv2(tpcfrr,rpirange,rprange,rpin,rpn,galaxyarrayrandom,totalnumberrandom,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
+    calculatetpcfv2(tpcfdr,rpirange,rprange,rpin,rpn,galaxyarraydata,totalnumberdata,box_random,xmin_random,ymin_random,zmin_random,box_xstep,box_ystep,box_zstep,box_xnum_random,box_ynum_random,box_znum_random);
 
     timeend = time(NULL);
     filltpcf(tpcfdd,rpin,rpn);
@@ -281,6 +384,24 @@ int main()
     delete [] tpcfdr;
     delete [] tpcf;
 
+    for (long i = 0; i < box_xnum_random; i++)
+    {
+        for (long j = 0; j < box_ynum_random; j++)
+        {
+            free(box_random[i][j]);
+        }
+        free(box_random[i]);
+    }
+    free(box_random);
+    for (long i = 0; i < box_xnum_data; i++)
+    {
+        for (long j = 0; j < box_ynum_data; j++)
+        {
+            free(box_data[i][j]);
+        }
+        free(box_data[i]);
+    }
+    free(box_data);
     free(redtorarray);
     free(raarraydata);free(decarraydata);free(rarraydata);
     free(galaxyarraydata);
