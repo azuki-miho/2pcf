@@ -19,8 +19,8 @@ int main()
     ofstream outfiletpcfdata, outfiletpcf;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
     string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/randomSelect";
-    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20180301/20180301_tpcfv2data";
-    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180301/20180301_tpcfv2";
+    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20180228/20180228_tpcfv2data";
+    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180228/20180228_tpcfv2";
     infiledata.open(filedata.data());
     infilerandom.open(filerandom.data());
     outfiletpcfdata.open(filetpcfdata.data());
@@ -277,7 +277,7 @@ int main()
     }
 
     initlinklist(box_random, xmin_random, ymin_random, zmin_random, box_xstep, box_ystep, box_zstep, galaxyarrayrandom,totalnumberrandom);
-    double rprange = 40, rpirange = 40;
+    double rprange = 5, rpirange = 5;
     int rpn  = 40, rpin = 40;
     double **tpcfdd;
     double **tpcfrr;
@@ -372,6 +372,9 @@ int main()
             outfiletpcf << endl;
         }
     }
+    cout << tpcfdd[0][0] << endl;
+    cout << tpcfrr[0][0] << endl;
+    cout << tpcfdr[0][0] << endl;
     for (int i = 0; i < rpin*2; i++)
     {
         delete [] tpcfdd[i];

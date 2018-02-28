@@ -10,8 +10,8 @@ int main()
 {
     ifstream tpcflogfile;
     ofstream tpcflinearfile;
-    string tpcflogfilename = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171125/20171125_tpcfv1";
-    string tpcflinearfilename = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171125/20171125_tpcfv1tolinear";
+    string tpcflogfilename = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180227/20180227_tpcfv2";
+    string tpcflinearfilename = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180227/20180227_tpcfv2tolinear";
     tpcflogfile.open(tpcflogfilename.data());
     tpcflinearfile.open(tpcflinearfilename.data());
     long rpn = 40, rpin = 40;

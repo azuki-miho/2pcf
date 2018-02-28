@@ -20,8 +20,8 @@ int main()
     ofstream outfiletpcfdata, outfiletpcf;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
     string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/randomSelect";
-    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20171125/20171125_tpcfv1data";
-    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20171125/20171125_tpcfv1";
+    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20180228/20180228_tpcfv1data";
+    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180228/20180228_tpcfv1";
     infiledata.open(filedata.data());
     infilerandom.open(filerandom.data());
     outfiletpcfdata.open(filetpcfdata.data());
@@ -141,7 +141,7 @@ int main()
         cout << galaxyarrayd[i].locorder[0] << endl;
     }
     */
-    double rprange = 40, rpirange = 40;
+    double rprange = 5, rpirange = 5;
     int rpn  = 40, rpin = 40;
     double **tpcfdd;
     double **tpcfrr;
@@ -217,6 +217,9 @@ int main()
             outfiletpcf << endl;
         }
     }
+    cout << tpcfdd[0][0] << endl;
+    cout << tpcfrr[0][0] << endl;
+    cout << tpcfdr[0][0] << endl;
     for (int i = 0; i < rpin*2; i++)
     {
         delete [] tpcfdd[i];
