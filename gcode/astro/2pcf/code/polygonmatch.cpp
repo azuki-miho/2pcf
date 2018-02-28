@@ -17,6 +17,8 @@ int main()
     long match_max = 300;
     long nc1 = 100, nc2 = 100;
     long Npoly_match[num_gal];
+    long polyid_for_gal[num_gal];
+    long sectorid_for_gal[num_gal];
     long gal_match_poly[num_gal][match_max];
     long head_of_chain[nc1][nc2]
     double radius = 0.36                       \\used for match
@@ -48,6 +50,8 @@ int main()
     }
 \\ read in the data of gal sample
 \\ read in the data of poly
-    initgal_match_poly();
+    initgal_match_poly(num_gal,galra,galdec,num_poly,poly_racen,polydeccen,radius,match_max,Npoly_match,gal_match_poly,gal_match_poly_dist,head_of_chain,nc1,nc2,linklist);
+    cout << "finish initalization of gal_match_poly" << endl;
+
     timeend = time(NULL);
 }
