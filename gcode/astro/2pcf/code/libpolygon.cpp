@@ -5,7 +5,27 @@
 
 using namespace std;
 
-void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_poly, double *poly_racen, double *poly_deccen,double radius, long match_max, long *Npoly_match, long **gal_match_poly, double **gal_match_poly_dis, long **head_of_chain, long nc1, long nc2, long *linklist);
+double dalp(double stm2, double galdec, long jq1, double hc1, double min_dec, int para)
+{
+    double cdeccl = cos((min_dec + jq1*hc1)/180*M_PI);
+    double cdeccu = cos((min_dec + (jq1+1)*hc1)/180*M_PI);
+    double cdeccmin;
+    if (cdeccl < cdeccu)
+    {
+        cdeccmin = cdeccl;
+    }
+    else
+    {
+        cdeccmin = cdeccu;
+    }
+    if (cdeccmin == 0)
+    {
+        return 180.
+    }
+
+}
+
+void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_poly, double *poly_racen, double *poly_deccen,double radius, long match_max, long *Npoly_match, long **gal_match_poly, double **gal_match_poly_dis, long **head_of_chain, long nc1, long nc2, long *linklist)
 {
     double min_dec = galdec[0];
     double max_dec = galdec[0];
@@ -26,10 +46,11 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
     double hc1, hc2;
     hc1 = (max_dec-min_dec)/((double)nc1);
     hc2 = (max_ra-min_ra)/((double)nc2);
-    inithead_of_chain(head_of_chain,nc1,nc2,linklist,num_poly,poly_racen,poly_deccen);
+    inithead_of_chain(head_of_chain,nc1,nc2,linklist,num_poly,poly_racen,poly_deccen,min_ra,min_dec,hc1,hc2);
 
     long iq1, iq2;
     double stm2 = sin(radius/2./180.*M_PI);
+    double dltra;
     for (int i = 0; i < num_gal; i++)
     {
         iq1 = floor((galdec[i]-min_dec)/hc1);
@@ -104,13 +125,140 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
                 tdist[j] = gal_match_poly_dist[i][j];
                 tindx[j] = gal_match_poly[i][j];
             }
-            sort_by_dist(nm,tdist,isort);    \\sort_by_dist need to be written
+            quicksortdist(nm,tdist,tindx);    \\sort_by_dist need to be written
             for (long j = 0; j < nm ; j++)
             {
-                gal_match_poly[i][j] = tindx[isort[j]];
-                gal_match_poly_dist[i][j] = tdist[isort[j]];
+                gal_match_poly[i][j] = tindx[j];
+                gal_match_poly_dist[i][j] = tdist[j];
             }
         }
     }
     return;
+}
+
+void inithead_of_chain(long **head_of_chain,long nc1,long nc2,long *linklist,long num_poly,double *poly_racen,double *poly_deccen,double min_ra, double min_dec, ,double hc1, double hc2)
+{
+    long q1, q2;
+    for (long i = 0; i < num_poly; i++)
+    {
+        q1 = floor((poly_deccen[i]-min_dec)/hc1);
+        q2 = floor((poly_racen[i]-min_ra)/hc2);
+        if ((q1 >= nc1) || (q1 < 0))
+        {
+            continue;
+        }
+        if (q2 >= nc2)
+        {
+            q2 -= nc2;
+        }
+        else if(q2 < 0)
+        {
+            q2 += nc2;
+        }
+        linklist[i] = head_of_chain[q1][q2];
+        head_of_chain[q1][q2] = i;
+    }
+}
+
+bool in_polygon(polygon *poly_array, long, polyindx, double x, double y, double z)
+{
+    Ncap = poly_array[polyindx].cap_number;
+    for (long i = 0; i < Ncap; i++)
+    {
+        if (poly_array[polyindx].cm[i] == 0 || poly_array[polyindx].cm[i] < -2.0)
+        {
+            return false;
+        }
+        
+    }
+    double cm_temp;
+    double cmdist_temp;
+    double xdist;
+    double ydist;
+    double zdist;
+    for (long i = 0; i < Ncap; i++)
+    {
+        if (poly_array[polyindx].cm[i] > 2)
+        {
+            continue;
+        }
+        cm_temp = fabs(poly_array[polyindx].cm[i]);
+        xdist = x - poly_array[polyindx].caps_xyz[i][0];
+        ydist = y - poly_array[polyindx].caps_xyz[i][1];
+        zdist = z - poly_array[polyindx].caps_xyz[i][2];
+        cmdist_temp = (xdist*xdist+ydist*ydist+zdist*zdist)/2.0;
+        if (poly_array[polyindx].cm[i] > 0)
+        {
+            if (cmdist_temp > cmtemp)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (cmdist_temp < cmtemp)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+long match_one_poly(long Nmatch, long *matchidx, galaxyv2* gal_array, long galindx, polygon *poly_array, long polyindx)
+{
+    for (int i = 0; i < Nmatch ; i++)
+    {
+        long polyindx = matchindx[i];
+        if (in_polygon(poly_array,polyindx,gal_array[galindx].xyz[0],gal_array[galindx].xyz[1],gal_array[galindx].xyz[2]));
+        {
+            return polyindx;
+        }
+    }
+    return 0;
+}
+
+void quicksortdist(long nm, double *tdist, long *tindx)
+{
+    if (nm == 1)
+    {
+        return;
+    }
+    if (nm <= 2)
+    {
+        if (tdist[0] > tdist[1])
+        {
+            double tempdist = tdist[0];
+            long temdindx = tindx[0];
+            tdist[0] = tdist[1];
+            tindx[0] = tdist[1];
+        }
+    }
+    else
+    {
+        long item_location = 0;
+        long compare_location = 1;
+        for (; compare_location < nm;)
+        {
+            if (tdist[item_location] < tdist[compare_location])
+            {
+                compare_location += 1;
+            }
+            else
+            {
+                double tempdist = tdist[item_location];
+                long tempindx = tindx[item_location];
+                tdist[item_location] = tdist[compare_location];
+                tindx[item_location] = tindx[compare_location];
+                tdist[compare_location] = tdist[item_location+1];
+                tindx[compare_location] = tindx[item_location+1];
+                tdist[item_location+1] = tempdist;
+                tindx[item_location+1] = tempindx;
+                item_location += 1;
+                compare_location += 1;
+            }
+        }
+        quicksortdist(item_location,tdist,tindx);
+        quicksortdist(nm-item_location-1,tdist+item_location+1,tindx+item_location+1);
+    }
 }

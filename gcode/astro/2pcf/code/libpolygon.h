@@ -23,6 +23,9 @@ struct poly
     long max_cap_number = MAX_CAP_NUMBER;
     long cap_number;
     double caps_xyz[MAX_CAP_NUMER][3];
+    double cm[MAX_CAP_NUMBER];
 }
+
+
 
 #endif
