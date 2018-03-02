@@ -5,11 +5,39 @@
 
 using namespace std;
 
+double angdis8(double galra, double galdec, double polyra, double polydec, long para)
+{
+\\if para is 1, it mean the unit is degree, if it is 0 the unit is rad
+    if (para == 1)
+    {
+        galra = galra/180.*M_PI;
+        galdec = galdec/180.*M_PI;
+        polyra = polyra/180.*M_PI;
+        polydec = polydec/180.*M_PI;
+    }
+    double theta1 = galdec + 0.5*M_PI;
+    double thet12 = polydec + 0.5*M_PI;
+    double cosgamma = sin(theta1)*sin(theta2)*cos(galra-polyra)+cos(theta1)*cos(theta2);
+    double angdis = 0;
+    if (cosgamma < 1)
+    {
+        angdis = arccos(cosgamma);
+    }
+    if (para == 1)
+    {
+        angdis = angdis*180/M_PI;
+    }
+    return angdis;
+}
+
 double dalp(double stm2, double galdec, long jq1, double hc1, double min_dec, int para)
 {
     double cdeccl = cos((min_dec + jq1*hc1)/180*M_PI);
     double cdeccu = cos((min_dec + (jq1+1)*hc1)/180*M_PI);
     double cdeccmin;
+    double sdalp2;
+    double sdalp22;
+    double atmp, btmp;
     if (cdeccl < cdeccu)
     {
         cdeccmin = cdeccl;
@@ -20,7 +48,36 @@ double dalp(double stm2, double galdec, long jq1, double hc1, double min_dec, in
     }
     if (cdeccmin == 0)
     {
-        return 180.
+        return 180.;
+    }
+    if (para == 1)
+    {
+        sdalp2 = stm2/pow(cos(galdec/180.*M_PI)*cdeccmin);
+    }
+    else
+    {
+        atmp = sin((galdec-(min_dec+jq1*hc1)*0.5)/180.*M_PI);
+        btmp = sin((galdec-(min_dec+(jq1+1)*hc1)*0.5)/180.*M_PI);
+        atmp = atmp*atmp;
+        btmp = btmp*btmp;
+        if (btmp < atmp)
+        {
+            atmp = btmp;
+        }
+        sdalp22 = (stm2*stm2-atmp)/(cos(galdec/180.*M_PI)*cdeccmin);
+        if (sdalp22 < 0)
+        {
+            sdalp22 = 0.;
+        }
+        sdalp2 = pow(sdalp22,0.5);
+    }
+    if (sdalp2 > 1)
+    {
+        return 180.;
+    }
+    else
+    {
+        return arcsin(sdalp2)*2.;
     }
 
 }
@@ -169,7 +226,7 @@ bool in_polygon(polygon *poly_array, long, polyindx, double x, double y, double 
         {
             return false;
         }
-        
+
     }
     double cm_temp;
     double cmdist_temp;
