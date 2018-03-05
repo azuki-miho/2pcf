@@ -17,7 +17,7 @@ double angdis8(double galra, double galdec, double polyra, double polydec, long 
     }
     double theta1 = galdec + 0.5*M_PI;
     double thet12 = polydec + 0.5*M_PI;
-    double cosgamma = sin(theta1)*sin(theta2)*cos(galra-polyra)+cos(theta1)*cos(theta2);
+    double cosgamma = sin(theta1)*sin(theta2)*cos(galra-polyra)+cos(theta1)*cos(theta2); \\dot product of the two unit vector
     double angdis = 0;
     if (cosgamma < 1)
     {

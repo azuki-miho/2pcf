@@ -20,6 +20,7 @@ struct galv2
 struct poly
 {
     double weight;
+    double str;
     long max_cap_number = MAX_CAP_NUMBER;
     long cap_number;
     double caps_xyz[MAX_CAP_NUMER][3];

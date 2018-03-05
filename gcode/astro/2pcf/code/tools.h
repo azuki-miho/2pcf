@@ -32,14 +32,6 @@ struct galaxyv2
     double luminosity;
 };
 
-struct polygon
-{
-    double weight;
-    long max_cap_number = MAX_CAP_NUMBER;
-    long cap_number;
-    double caps_xyz[MAX_CAP_NUMER][3];
-}
-
 struct redtor
 {
     double red;

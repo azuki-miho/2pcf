@@ -15,15 +15,18 @@ int main()
     ifstream infiledata, infilerandom;
     ofstream outfileselect, outfilereadme;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
-    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOM/randomSamp";
-    string fileselect = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/randomSelect";
-    string filereadme = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/readme";
+//    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOM/randomSamp";
+//    string fileselect = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/randomSelect";
+//    string filereadme = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/readme";
+    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/myrandom";
+    string fileselect = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/myrandomSelect";
+    string filereadme = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/myrandomselectreadme";
     infiledata.open(filedata.data());
     infilerandom.open(filerandom.data());
     outfileselect.open(fileselect.data());
     outfilereadme.open((filereadme.data()));
     long totalnumberdata = 396068;       //acutally 396068
-    long totalnumberrandom = 672238;     //acutally 672238
+    long totalnumberrandom = 2888969;     //acutally 672238
     long numberdata  = 0;
     long numberrandom = 0;
     long numberselect = 0;
@@ -80,7 +83,12 @@ int main()
         }*/
         numberdata += 1;
     }
-    while (/*!infilerandom.eof()*/numberrandom<totalnumberrandom)
+    ramin -= 0.36;
+    ramax += 0.36;
+    decmin -= 0.36;
+    decmax += 0.36;
+/*
+     while (numberrandom<totalnumberrandom)
     {
         string s;
         double x, y, z;
@@ -132,7 +140,63 @@ int main()
         }
         numberrandom += 1;
     }
-    outfilereadme << "galaxy ID:" << endl << "x:" << endl << "y:" << endl << "z:" << endl << "totalnumber:" << numberselect << endl;
+*/
+    while (/*!infilerandom.eof()*/numberrandom<totalnumberrandom)
+    {
+        string s;
+        double x, y, z;
+        double apm;
+        double ra, dec, r;
+        getline(infilerandom,s);
+        istringstream is(s);
+        string str1,str2,str3,str4,str5;
+        const char  *str1c, *str2c, *str3c, *str4c, *str5c;
+        is >> str1 >> str2 >> str3 >> str4 >> str5;
+        str2c = str2.c_str();
+        str3c = str3.c_str();
+        str4c = str4.c_str();
+        str5c = str5.c_str();
+        x = atof(str2c);
+        y = atof(str3c);
+        z = atof(str4c);
+        apm = atof(str5c);
+        r = pow(x*x+y*y+z*z,0.5);
+        dec = acos(pow(x*x+y*y,0.5)/r)*180./M_PI;
+        if (z <= 0)
+        {
+            dec = -dec;
+        }
+        ra = asin(abs(x)/pow(x*x+y*y,0.5))*180./M_PI;
+        if (x >= 0)
+        {
+            if (y >= 0)
+            {
+                ra = ra;
+            }
+            else
+            {
+                ra = 360-ra;
+            }
+        }
+        else
+        {
+            if (y >= 0)
+            {
+                ra = 180 - ra;
+            }
+            else
+            {
+                ra = 180+ra;
+            }
+        }
+        if (ramin < ra && ra < ramax & decmin < dec && dec < decmax && rmin < r && r < rmax)
+        {
+            numberselect += 1;
+            outfileselect  << numberselect << "  " << x << "  " << y << "  " << z << "  " << apm << endl;
+        }
+        numberrandom += 1;
+    }
+    outfilereadme << "galaxy ID:" << endl << "x:" << endl << "y:" << endl << "z:" << endl << "apparent magnitude:" << endl << "totalnumber:" << numberselect << endl;
     outfileselect.close();
     outfilereadme.close();
     infiledata.close();
