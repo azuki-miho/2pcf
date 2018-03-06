@@ -31,14 +31,26 @@ generaterandom : tools.o generaterandom.o
 generaterandom.o : tools.h generaterandom.cpp
 	g++ -c generaterandom.cpp -o generaterandom.o
 
+libpolygon.o : libpolygon.cpp libpolygon.h
+	g++ -O2 -c libpolygon.cpp -o libpolygon.o -std=c++11
+
 log_linear : log_linear.o tools.o
 	g++ log_linear.o tools.o -o log_linear -std=c++11
 
 log_linear.o : tools.h log_linear.cpp
 	g++ -c log_linear.cpp -o log_linear.o
 
+polygonmatch : polygonmatch.o libpolygon.o
+	g++ -O2  polygonmatch.o libpolygon.o -o polygonmatch -std=c++11
+
+polygonmatch.o : polygonmatch.cpp libpolygon.h
+	g++ -O2 -c polygonmatch.cpp -o polygonmatch.o -std=c++11
+
 ztor : tools.o ztor.o
 	g++ ztor.o tools.o -o ztor -std=c++11
 
 ztor.o : tools.h ztor.cpp
 	g++ -c ztor.cpp -o ztor.o
+
+cleanpolygonmatch:
+	rm ./polygonmatch ./polygonmatch.o ./libpolygon.o

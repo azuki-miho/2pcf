@@ -4,7 +4,9 @@
 #include<cstring>
 #include<ctime>
 #include<cstdlib>
-#include "libpoly.h"
+#include<vector>
+#include<sstream>
+#include "libpolygon.h"
 
 using namespace std;
 
@@ -13,7 +15,9 @@ int main()
     time_t timebegin, timeend;
     timebegin = time(NULL);
 
-    long num_gal, num_poly, num_gal_selected;
+    long num_gal = 1086583;
+    long num_poly = 653897;
+    long num_gal_selected;
     long match_max = 300;
     long nc1 = 100, nc2 = 100;
     long idx_sel_gal = 0;
@@ -25,24 +29,37 @@ int main()
 
     long isec[num_poly];
     long linklist[num_poly];
-    long gal_match_poly[num_gal][match_max];
-    long head_of_chain[nc1][nc2]; \\nc1 for dec and nc2 for ra
+    long **head_of_chain;
+    head_of_chain = (long**)malloc(sizeof(long*)*nc1);
+    for (long i = 0; i < nc1; i++)
+    {
+        head_of_chain[i] = (long*)malloc(sizeof(long)*nc2);
+    }
+//nc1 for dec and nc2 for ra
     int cn4_visible[num_gal];
-    double radius = 0.36;                       \\used for match
+    long **gal_match_poly;
+    double radius = 0.36;
+//used for match
     double poly_racen[num_poly], poly_deccen[num_poly];
     double poly_maglim[num_poly];
     double fgot[num_poly];
     double galra[num_gal],galdec[num_gal];
     double completeness[num_gal],apm_limit[num_gal];
     double gal_apm[num_gal];
-    double gal_match_poly_dis[num_gal][match_max];
+    double **gal_match_poly_dis;
     galv2 *gal_array;
     poly *poly_array;
+    gal_match_poly = (long**)malloc(sizeof(long*)*num_gal);
+    gal_match_poly_dis = (double**)malloc(sizeof(double*)*num_gal);
     gal_array = (galv2*)malloc(sizeof(galv2)*num_gal);
     poly_array = (poly*)malloc(sizeof(poly)*num_poly);
-
+    for (long i = 0; i < num_gal; i++)
+    {
+        gal_match_poly[i] = (long*)malloc(sizeof(long)*match_max);
+        gal_match_poly_dis[i] = (double*)malloc(sizeof(double)*match_max);
+    }
     cout << "finish definition!" << endl;
-\\ initialize all the variable
+// initialize all the variable
     for (long i = 0; i < num_gal; i++)
     {
         Npoly_match[i] = 0;
@@ -52,7 +69,7 @@ int main()
         cn4_visible[i] = 0;
         completeness[i] = 0;
         apm_limit[i] = 0;
-        for (long j = 0; j < match_max)
+        for (long j = 0; j < match_max; j++)
         {
             gal_match_poly[i][j] = 0;
             gal_match_poly_dis[i][j] = 0;
@@ -66,13 +83,13 @@ int main()
     {
         for (long j = 0; i < nc2; j++)
         {
-            head_of_chain = 0;
+            head_of_chain[i][j] = 0;
         }
     }
 
-    initgal_match_poly(num_gal,galra,galdec,num_poly,poly_racen,polydeccen,radius,match_max,Npoly_match,gal_match_poly,gal_match_poly_dist,head_of_chain,nc1,nc2,linklist);
+    initgal_match_poly(num_gal,galra,galdec,num_poly,poly_racen,poly_deccen,radius,match_max,Npoly_match,gal_match_poly,gal_match_poly_dis,head_of_chain,nc1,nc2,linklist);
     cout << "finish initalization of gal_match_poly" << endl;
-\\ read in the data of gal sample\
+// read in the data of gal sample
     ifstream galfile;
     string galfilestr = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/myrandomSelect";
     galfile.open(galfilestr.data());
@@ -93,7 +110,7 @@ int main()
         gal_array[i].xyz[2] = atof(str4c);
         gal_apm[i] = atof(str5c);
     }
-\\ read in the data of poly
+// read in the data of poly
     ifstream polyfile;
     string polyfilestr = "/home/gongjingyu/gcode/astro/2pcf/polygonfile/lss_combmask.dr72.ply";
     polyfile.open(polyfilestr.data());
@@ -106,9 +123,9 @@ int main()
         const char *str1c;
         is >> str1;
         str1c = str1.c_str();
-        num_poly = atof(str1c);
+        //num_poly = atof(str1c);
     }
-    for long (i = 0; i < polygons; i++)
+    for (long i = 0; i < num_poly; i++)
     {
         string s;
         getline(polyfile,s);
@@ -127,7 +144,7 @@ int main()
             cout << "larger max_cap_number needed" << endl;
             return 0;
         }
-        for (j = 0; j < poly_array[i].cap_number; j++)
+        for (long j = 0; j < poly_array[i].cap_number; j++)
         {
             string st;
             getline(polyfile,st);
@@ -145,7 +162,7 @@ int main()
             poly_array[i].cm[j] = atof(str4ct);
         }
     }
-\\ read in the ra dec apm and fgot
+// read in the ra dec apm and fgot
     for (long i = 0; i < num_poly; i++)
     {
         string s;
@@ -165,14 +182,14 @@ int main()
         poly_maglim[i] = atof(str4c);
         fgot[i] = atof(str5c);
     }
-\\ find the exact polygon ID for every galaxy
+// find the exact polygon ID for every galaxy
     for (long i = 0; i < num_gal; i++)
     {
         if (Npoly_match[i] = 0)
         {
             continue;
         }
-        long tempid = match_one_poly();
+        long tempid = match_one_poly(Npoly_match[i],gal_match_poly[i],gal_array,i,poly_array);
         if (tempid > 0)
         {
             polyid_for_gal[i] = tempid;
@@ -181,8 +198,7 @@ int main()
             completeness[i] = fgot[tempid];
         }
     }
-\\ select whether one galaxy sample can be observed
-    long selnum = 0
+// select whether one galaxy sample can be observed
     ofstream galpolymatchfile;
     string galpolymatchfilestr = "/home/gongjingyu/gcode/astro/MY_RANDOM/galpolymatch";
     galpolymatchfile.open(galpolymatchfilestr.data());
@@ -203,18 +219,18 @@ int main()
             cn3 += 1;
             continue;
         }
-        if ( > completeness[i])
+        if (((double)(rand()))/(RAND_MAX) > completeness[i])
         {
             cn4 += 4;
             cn4_visible[i] = -1;
         }
-\\output the xyz or radecr, cn4visible, apparent magnitude, polygon ID, sector ID, completeness
-        selnum += 1;
-        galpolymatchfile << selnum << "  " << gal_array[i].xyz[0] << "  " << gal_array[i].xyz[1] << "  " << gal_array[i].xyz[2] << "  " << gal_apm[i] << "  " << cn4_visible[i] << "  " << polyid_for_gal[i] << "  " << sectorid_for_gal[i] << "  " << completeness[i] << endl;
+//output the xyz or radecr, cn4visible, apparent magnitude, polygon ID, sector ID, completeness
+        num_gal_selected += 1;
+        galpolymatchfile << num_gal_selected << "  " << gal_array[i].xyz[0] << "  " << gal_array[i].xyz[1] << "  " << gal_array[i].xyz[2] << "  " << gal_apm[i] << "  " << cn4_visible[i] << "  " << polyid_for_gal[i] << "  " << sectorid_for_gal[i] << "  " << completeness[i] << endl;
     }
     ofstream readmefile;
     string readmefilestr = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/readme_galpolymatch";
     readmefile.open(readmefilestr.data());
-    readmefile << "index:" << endl << "x:" << endl << "y:" << endl << "z:" << endl << "apparent magnitude:" << endl << "cn4_visible:" << endl << "polygonID:" << endl << "sectorID:" << endl << "completeness:" << endl <<"total number:" << selnum;
+    readmefile << "index:" << endl << "x:" << endl << "y:" << endl << "z:" << endl << "apparent magnitude:" << endl << "cn4_visible:" << endl << "polygonID:" << endl << "sectorID:" << endl << "completeness:" << endl <<"total number:" << num_gal_selected;
     timeend = time(NULL);
 }
