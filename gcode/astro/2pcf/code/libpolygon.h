@@ -5,8 +5,8 @@
 #include<cstdlib>
 #include<cmath>
 #include<vector>
-#define MAX_CAP_NUMBER 20
 
+#define MAX_CAP_NUMBER 20
 
 using namespace std;
 
@@ -37,7 +37,7 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
 
 void inithead_of_chain(long **head_of_chain,long nc1,long nc2,long *linklist,long num_poly,double *poly_racen,double *poly_deccen,double min_ra, double min_dec,double hc1, double hc2);
 
-bool in_polygon(poly *poly_array, long polyindx, double x, double y, double z);
+int in_polygon(poly *poly_array, long polyindx, double x, double y, double z);
 
 long match_one_poly(long Nmatch, long *matchindx, galv2* gal_array, long galindx, poly *poly_array);
 

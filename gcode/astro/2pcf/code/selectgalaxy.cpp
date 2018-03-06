@@ -161,12 +161,8 @@ int main()
         z = atof(str4c);
         apm = atof(str5c);
         r = pow(x*x+y*y+z*z,0.5);
-        dec = acos(pow(x*x+y*y,0.5)/r)*180./M_PI;
-        if (z <= 0)
-        {
-            dec = -dec;
-        }
-        ra = asin(abs(x)/pow(x*x+y*y,0.5))*180./M_PI;
+        dec = asin(z/r)*180./M_PI;
+        ra = asin(abs(y)/pow(x*x+y*y,0.5))*180./M_PI;
         if (x >= 0)
         {
             if (y >= 0)

@@ -86,8 +86,8 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
 {
     double min_dec = galdec[0];
     double max_dec = galdec[0];
-    double min_ra = galra[0];
-    double max_ra = galra[0];
+    double min_ra = 0;
+    double max_ra = 360;
     for (long i = 0; i < num_gal; i++)
     {
         if (min_dec > galdec[i])
@@ -98,25 +98,37 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
         {
             max_dec = galdec[i];
         }
-        if (min_ra > galra[i])
+    }
+    for (long i = 0; i < num_poly; i++)
+    {
+        if (min_dec > poly_deccen[i])
         {
-            min_ra = galra[i];
+            min_dec = poly_deccen[i];
         }
-        if (max_ra < galra[i])
+        if (max_dec < poly_deccen[i])
         {
-            max_ra = galra[i];
+            max_dec = poly_deccen[i];
         }
     }
     min_dec -= 0.1;
     max_dec += 0.1;
-    min_ra -= 0.1;
-    max_ra += 0.1;
 
     double hc1, hc2;
     hc1 = (max_dec-min_dec)/((double)nc1);
     hc2 = (max_ra-min_ra)/((double)nc2);
+    cout << "begin init head_of_chain" << endl;
     inithead_of_chain(head_of_chain,nc1,nc2,linklist,num_poly,poly_racen,poly_deccen,min_ra,min_dec,hc1,hc2);
-
+/*    for (int i = 0; i < 100; i++)
+    {
+        for (int j = 0; j < 100; j++ )
+        {
+            if (head_of_chain[i][j] != -1)
+            {
+                cout << i << "," << j << endl;
+            }
+        }
+    }*/
+    cout << "finish init head_of_chain" << endl;
     long iq1, iq2;
     double stm2 = sin(radius/2./180.*M_PI);
     double dltra;
@@ -126,19 +138,21 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
         iq2 = floor((galra[i]-min_ra)/hc2);
         long jq1m = floor(radius/hc1)+1;
         long jq2m;
-        for (long jq1 = iq1-jq1m; jq1 <= iq1+jq1m; jq1++)
+        long startjq1 = iq1-jq1m;
+        long endjq1 = iq1+jq1m;
+        for (long jq1 = startjq1; jq1 <= endjq1; jq1+=1)
         {
             if ((jq1 >= nc1)or(jq1 < 0))
             {
                 continue;
             }
-            if (jq1 = iq1)
+            if (jq1 == iq1)
             {
-                dltra = dalp(stm2,galdec[i],jq1,hc1,min_dec,1);
+                dltra = radius;//dalp(stm2,galdec[i],jq1,hc1,min_dec,1);
             }
             else
             {
-                dltra = dalp(stm2,galdec[i],jq1,hc1,min_dec,0);
+                dltra = radius;//dalp(stm2,galdec[i],jq1,hc1,min_dec,0);
             }
             jq2m = floor(dltra/hc2)+1;
             long jq2max = iq2+jq2m;
@@ -159,7 +173,7 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
                     jq2t += nc2;
                 }
                 long j = head_of_chain[jq1][jq2t];
-                for (;j != 0;)
+                for (;j != -1;)
                 {
                     double adist = angdis8(galra[i],galdec[i],poly_racen[j],poly_deccen[j],1);
                     if (adist < radius)
@@ -180,11 +194,13 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
             }
         }
     }
+    cout << "finish find the potential polygon" << endl;
     long nm;
     double tdist[match_max];
     long isort[match_max];
     long tindx[match_max];
-    for (long i = 0; i < num_gal; i++)
+    cout << "begin sort the potential" << endl;
+/*    for (long i = 0; i < num_gal; i++)
     {
         nm = Npoly_match[i];
         for (;nm > 1;)
@@ -201,7 +217,8 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
                 gal_match_poly_dis[i][j] = tdist[j];
             }
         }
-    }
+    }*/
+    cout << "finish sort the potential" << endl;
     return;
 }
 
@@ -229,14 +246,14 @@ void inithead_of_chain(long **head_of_chain,long nc1,long nc2,long *linklist,lon
     }
 }
 
-bool in_polygon(poly *poly_array, long polyindx, double x, double y, double z)
+int in_polygon(poly *poly_array, long polyindx, double x, double y, double z)
 {
     long Ncap = poly_array[polyindx].cap_number;
     for (long i = 0; i < Ncap; i++)
     {
         if (poly_array[polyindx].cm[i] == 0 || poly_array[polyindx].cm[i] < -2.0)
         {
-            return false;
+            return 0;
         }
 
     }
@@ -254,24 +271,25 @@ bool in_polygon(poly *poly_array, long polyindx, double x, double y, double z)
         cm_temp = fabs(poly_array[polyindx].cm[i]);
         xdist = x - poly_array[polyindx].caps_xyz[i][0];
         ydist = y - poly_array[polyindx].caps_xyz[i][1];
-        zdist = z - poly_array[polyindx].caps_xyz[i][2];
+        zdist = z - poly_array[polyindx].caps_xyz[i][2]; //these three value haven't been normalized
         cmdist_temp = (xdist*xdist+ydist*ydist+zdist*zdist)/2.0;
         if (poly_array[polyindx].cm[i] > 0)
         {
             if (cmdist_temp > cm_temp)
             {
-                return false;
+                return 0;
             }
         }
         else
         {
             if (cmdist_temp < cm_temp)
             {
-                return false;
+                return 0;
             }
         }
     }
-    return true;
+    cout << "success" << endl;
+    return 1;
 }
 
 long match_one_poly(long Nmatch, long *matchindx, galv2* gal_array, long galindx, poly *poly_array)
@@ -279,12 +297,17 @@ long match_one_poly(long Nmatch, long *matchindx, galv2* gal_array, long galindx
     for (int i = 0; i < Nmatch ; i++)
     {
         long polyindx = matchindx[i];
-        if (in_polygon(poly_array,polyindx,gal_array[galindx].xyz[0],gal_array[galindx].xyz[1],gal_array[galindx].xyz[2]));
+        double x = gal_array[galindx].xyz[0], y = gal_array[galindx].xyz[1], z = gal_array[galindx].xyz[2];
+        double r = pow(x*x + y*y + z*z,0.5);
+        x = x/r;
+        y = y/r;
+        z = z/r;
+        if (in_polygon(poly_array,polyindx,x,y,z))
         {
             return polyindx;
         }
     }
-    return 0;
+    return -1;
 }
 
 void quicksortdist(long nm, double *tdist, long *tindx)
