@@ -16,7 +16,7 @@ int main()
     time_t timebegin, timeend;
     timebegin = time(NULL);
 
-    long num_gal = 10000;//1086583;
+    long num_gal = 1086583;
     long num_poly = 653897;
     long num_gal_selected = 0;
     long match_max = 300;
@@ -107,7 +107,7 @@ int main()
     cout << "make all the element 0" << endl;
 // read in the data of gal sample
     ifstream galfile;
-    string galfilestr = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/myrandom";
+    string galfilestr = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/myrandomSelect";
     galfile.open(galfilestr.data());
     for (long i; i < num_gal; i++)
     {

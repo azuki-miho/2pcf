@@ -148,11 +148,11 @@ void initgal_match_poly(long num_gal, double *galra, double *galdec, long num_po
             }
             if (jq1 == iq1)
             {
-                dltra = radius;//dalp(stm2,galdec[i],jq1,hc1,min_dec,1);
+                dltra = dalp(stm2,galdec[i],jq1,hc1,min_dec,1);
             }
             else
             {
-                dltra = radius;//dalp(stm2,galdec[i],jq1,hc1,min_dec,0);
+                dltra = dalp(stm2,galdec[i],jq1,hc1,min_dec,0);
             }
             jq2m = floor(dltra/hc2)+1;
             long jq2max = iq2+jq2m;
@@ -288,7 +288,6 @@ int in_polygon(poly *poly_array, long polyindx, double x, double y, double z)
             }
         }
     }
-    cout << "success" << endl;
     return 1;
 }
 

@@ -8,7 +8,7 @@ xsize = 80
 x = numpy.linspace(-40, 40, xsize)
 y = numpy.linspace(-40, 40, ysize)
 X, Y = numpy.meshgrid(x, y)
-tpcffile = open("/home/gongjingyu/gcode/astro/2pcf/outcome/20180227/20180227_tpcfv2tolinear")
+tpcffile = open("/home/gongjingyu/gcode/astro/2pcf/outcome/20180307/20180307_tpcfv2tolinear")
 tpcf = numpy.zeros((ysize, xsize))
 for i in range(80):
     line = tpcffile.readline()
@@ -20,5 +20,5 @@ for i in range(80):
 plt.contourf(X, Y, tpcf, 7, alpha=0)
 C = plt.contour(X, Y, tpcf, 7, colors='black', linewidth=0.5)
 plt.clabel(C, inline=True, fontsize=10)
-plt.savefig("/home/gongjingyu/gcode/astro/2pcf/outcome/20180227/20180227_tpcfv2tolinearlog_contour.eps")
+plt.savefig("/home/gongjingyu/gcode/astro/2pcf/outcome/20180307/20180307_tpcfv2tolinearlog_contour.eps")
 #plt.savefig("./../outcome/20171107_tpcf.eps")

@@ -18,15 +18,15 @@ int main()
     ifstream infiledata, infilerandom;
     ofstream outfiletpcfdata, outfiletpcf;
     string filedata="/home/gongjingyu/gcode/astro/2pcf/SDSS7_REAL/SDSS7_real";
-    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/SDSS7_RANDOMSELECT/randomSelect";
-    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20180228/20180228_tpcfv2data";
-    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180228/20180228_tpcfv2";
+    string filerandom = "/home/gongjingyu/gcode/astro/2pcf/MY_RANDOM/galpolymatch";
+    string filetpcfdata="/home/gongjingyu/gcode/astro/2pcf/outcome/20180307/20180307_tpcfv2data";
+    string filetpcf = "/home/gongjingyu/gcode/astro/2pcf/outcome/20180307/20180307_tpcfv2";
     infiledata.open(filedata.data());
     infilerandom.open(filerandom.data());
     outfiletpcfdata.open(filetpcfdata.data());
     outfiletpcf.open(filetpcf.data());
     long totalnumberdata = 396068;       //acutally 396068
-    long totalnumberrandom = 585639;    //acutally 585639
+    long totalnumberrandom = 484718;    //acutally 585639
     //long totalnumberrandom = 80000;     acutally 672238
     long numberdata  = 0;
     long numberrandom = 0;
@@ -277,7 +277,7 @@ int main()
     }
 
     initlinklist(box_random, xmin_random, ymin_random, zmin_random, box_xstep, box_ystep, box_zstep, galaxyarrayrandom,totalnumberrandom);
-    double rprange = 5, rpirange = 5;
+    double rprange = 10, rpirange = 10;
     int rpn  = 40, rpin = 40;
     double **tpcfdd;
     double **tpcfrr;
